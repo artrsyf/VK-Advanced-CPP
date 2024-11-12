@@ -73,18 +73,19 @@ void Plane::showInfo() const {
 
     int totalBaggageWeight = 0;
     int totalLuggageWeight = 0;
-    int allowedBaggageWeight = 0;
+    int allowedWeight = 0;
     for (const auto & segment : segments) {
         segment->showInfo();
 
         totalBaggageWeight += segment->getBaggageWeight();
-        allowedBaggageWeight += segment->getAllowedBaggageWeight();
+        allowedWeight += segment->getAllowedWeight();
         totalLuggageWeight += segment->getLuggageWeight();
     }
 
     std::cout << "TOTAL:\n\n";
     std::cout << "Total luggage weight: " << totalLuggageWeight << " kg;\n";
-    std::cout << "Total baggage load: " << totalBaggageWeight << "/" << allowedBaggageWeight << "kg.";
+    std::cout << "Total baggage weight: " << totalBaggageWeight << " kg;\n";
+    std::cout << "Total load: " << totalBaggageWeight + totalLuggageWeight << "/" << allowedWeight << "kg.";
 }
 
 template <typename EnumType>

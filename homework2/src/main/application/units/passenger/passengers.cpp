@@ -209,7 +209,7 @@ bool PassengerSegment::invariant() const
         if (!person->invariant()) return false;
     }
 
-    return currentBaggageWeight <= allowedWeight;
+    return currentBaggageWeight + currentLuggageWeight <= allowedWeight;
 }
 
 int PassengerSegment::getBaggageWeight() const
@@ -222,7 +222,7 @@ int PassengerSegment::getLuggageWeight() const
     return currentLuggageWeight;
 }
 
-int PassengerSegment::getAllowedBaggageWeight() const
+int PassengerSegment::getAllowedWeight() const
 {
     return allowedWeight;
 }
@@ -230,8 +230,8 @@ int PassengerSegment::getAllowedBaggageWeight() const
 void PassengerSegment::registerBaggage(std::shared_ptr<HumanUnitI> person)
 {
     int baggageWeight = person->getBaggageWeight();
-    int baggageWeightLeft = allowedWeight - currentBaggageWeight;
-    int toReleaseWeight = baggageWeight - baggageWeightLeft;
+    int weightLeft = allowedWeight - currentBaggageWeight - currentLuggageWeight;
+    int toReleaseWeight = baggageWeight - weightLeft;
 
     while (toReleaseWeight > 0)
     {
@@ -296,23 +296,30 @@ ReturnCodeType PassengerSegment::add(std::shared_ptr<HumanUnitI> person)
         return ReturnCodeType::ALLOCATED;
     }
 
-    int baggageWeightLeft = allowedWeight - currentBaggageWeight;
+    int weightLeft = allowedWeight - currentBaggageWeight - currentLuggageWeight;
+    if (person->getLuggageWeight() > weightLeft)
+    {
+        /* Выкинуть пассажира */
+        std::cout << "!!CANT REGISTER {TYPE} PASSENGER, ID = {ID}!!\n";
+        return ReturnCodeType::ALLOCATED;
+    }
+    currentLuggageWeight += person->getLuggageWeight();
+    weightLeft = allowedWeight - currentBaggageWeight - currentLuggageWeight;
 
     if (std::holds_alternative<PassengerSegmentType>(person->getType())) {
         PassengerSegmentType segmentType = std::get<PassengerSegmentType>(person->getType());
 
         if (segmentType == PassengerSegmentType::BUSINESS || 
             segmentType == PassengerSegmentType::FIRST_CLASS) {
-            if (person->getBaggageWeight() > baggageWeightLeft) {
+            if (person->getBaggageWeight() > weightLeft) {
                 persons.push_back(person);
-                currentLuggageWeight += person->getLuggageWeight();
 
                 return ReturnCodeType::NEED_TRANSFER;
             }
         }
     }
 
-    while (person->getBaggageWeight() > baggageWeightLeft)
+    while (person->getBaggageWeight() > weightLeft)
     {
         if (auto personWithBaggageHandler = std::dynamic_pointer_cast<FlexibleBaggageI>(person)) {
             personWithBaggageHandler->dropBiggestBaggagePosition();
@@ -336,8 +343,7 @@ ReturnCodeType PassengerSegment::add(std::shared_ptr<HumanUnitI> person)
     persons.push_back(person);
 
     currentBaggageWeight += person->getBaggageWeight();
-    currentLuggageWeight += person->getLuggageWeight();
-
+    
     return ReturnCodeType::ALLOCATED;
 }
 
@@ -358,8 +364,8 @@ void PassengerSegment::showInfo() const {
     std::cout << "INFO: Segment " << mapSegmentToString(type) << "\n\n";
 
     std::cout << "Luggage load: " << currentLuggageWeight << " kg;" << '\n';
-    std::cout << "Baggage bound load: " << allowedWeight << " kg;" << '\n';
     std::cout << "Baggage load: " << currentBaggageWeight << " kg;" << "\n\n";
+    std::cout << "Total segment load: " << currentLuggageWeight + currentBaggageWeight << "/" << allowedWeight << " kg;" << '\n';
 
     std::cout << "EACH PERSON INFO:\n\n";
 

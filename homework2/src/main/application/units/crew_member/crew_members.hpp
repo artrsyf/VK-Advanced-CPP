@@ -49,7 +49,7 @@ public:
 
     void registerBaggage(std::shared_ptr<HumanUnitI> person) override { /* NOT IMPLEMENTED */ };
 
-    int getAllowedBaggageWeight() const override;
+    int getAllowedWeight() const override;
 
     std::variant<PassengerSegmentType, CrewMemberType> getType() const override;
 

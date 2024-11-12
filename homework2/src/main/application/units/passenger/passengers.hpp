@@ -77,7 +77,7 @@ public:
 
     int getLuggageWeight() const override;
 
-    int getAllowedBaggageWeight() const override;
+    int getAllowedWeight() const override;
 
     void registerBaggage(std::shared_ptr<HumanUnitI> person) override;
 

@@ -57,7 +57,7 @@ int CrewSegment::getLuggageWeight() const
     return currentLuggageWeight;
 }
 
-int CrewSegment::getAllowedBaggageWeight() const
+int CrewSegment::getAllowedWeight() const
 {
     return allowedWeight;
 }
