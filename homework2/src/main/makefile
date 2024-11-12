@@ -7,15 +7,16 @@ CXXFLAGS = -std=c++17 -Wall -g
 
 # Папка с исходниками
 SRC_DIR = .
-UNIT_DIR = $(SRC_DIR)/units
+UNIT_DIR = $(SRC_DIR)/application/units
+SHARED_DIR = $(SRC_DIR)/shared
 
 # Все файлы исходного кода
 SRCS = $(SRC_DIR)/main.cpp \
-       $(UNIT_DIR)/crew_members.cpp \
-       $(UNIT_DIR)/passengers.cpp \
-       $(UNIT_DIR)/plane.cpp \
-	   $(UNIT_DIR)/enums/crew_member_type.cpp \
-	   $(UNIT_DIR)/enums/passenger_segment_type.cpp
+       $(UNIT_DIR)/crew_member/crew_members.cpp \
+       $(UNIT_DIR)/passenger/passengers.cpp \
+       $(UNIT_DIR)/plane/plane.cpp \
+	   $(SHARED_DIR)/enums/crew_member_type/crew_member_type.cpp \
+	   $(SHARED_DIR)/enums/passenger_segment_type/passenger_segment_type.cpp
 
 # Генерация списка объектных файлов из исходных
 OBJS = $(SRCS:.cpp=.o)

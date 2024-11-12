@@ -2,8 +2,8 @@
 
 #include <variant>
 
-#include "passengers.hpp"
-#include "crew_members.hpp"
+#include "../passenger/passengers.hpp"
+#include "../crew_member/crew_members.hpp"
 
 using EnumVariant = std::variant<PassengerSegmentType, CrewMemberType>;
 
@@ -26,7 +26,7 @@ public:
 
 private:
     std::vector<std::shared_ptr<UnitSegmentI>> segments;
-    template <typename EnumType>
     
+    template <typename EnumType>
     std::shared_ptr<UnitSegmentI> getSegmentByType(EnumType type);
 };

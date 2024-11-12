@@ -1,7 +1,10 @@
 #pragma once
 
-#include "enums/passenger_segment_type.hpp"
-#include "enums/crew_member_type.hpp"
+#include <variant>
+#include <memory>
+
+#include "../../../shared/enums/passenger_segment_type/passenger_segment_type.hpp"
+#include "../../../shared/enums/crew_member_type/crew_member_type.hpp"
 
 class InvariantI 
 {

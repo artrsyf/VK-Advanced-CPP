@@ -3,7 +3,7 @@
 #include <string>
 #include <limits>
 
-#include "units/plane.hpp"
+#include "application/units/plane/plane.hpp"
 
 std::shared_ptr<Passenger> createPassengerFromInput(const std::string &input)
 {
