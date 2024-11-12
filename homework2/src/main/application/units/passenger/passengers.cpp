@@ -302,7 +302,21 @@ ReturnCodeType PassengerSegment::add(std::shared_ptr<HumanUnitI> person)
             2. Банально нет мест;
             3. Он не может поместить свою ручную кладь.
         */
-        std::cout << "!!CANT REGISTER {TYPE} PASSENGER, ID = {ID}!!\n";
+
+        if (std::holds_alternative<PassengerSegmentType>(person->getType())) {
+            PassengerSegmentType segmentType = std::get<PassengerSegmentType>(person->getType());
+            std::string segmentTypeString = mapSegmentToString(segmentType);
+            if (auto personIdentifiable = std::dynamic_pointer_cast<IdentifiableI>(person))
+            {
+                std::string personId = personIdentifiable->getId();
+                std::cout << "!!CANT REGISTER " << segmentTypeString << " PASSENGER, ID = " << personId << "!!\n";
+            }
+            else
+            {
+                std::cout << "ERROR; Unable to get person id" << '\n';
+            }
+        }
+
         return ReturnCodeType::ALLOCATED;
     }
     
