@@ -115,9 +115,18 @@ std::string Passenger::getId() const
     return id;
 }
 
-void Passenger::dropSmallestBaggagePosition()
+FixedVector<BaggagePos> Passenger::getBaggagePositions() const
 {
-    baggage.removeMaxByCriteria([](const BaggagePos & pos) { return pos.weight; });
+    return baggage;
+}
+
+int Passenger::dropBiggestBaggagePosition()
+{
+    auto removedBaggage = baggage.removeMaxByCriteria([](const BaggagePos& a, const BaggagePos& b) {
+        return a.weight < b.weight;
+    });
+
+    return removedBaggage.weight;
 }
 
 void Passenger::showInfo() const
@@ -218,19 +227,95 @@ int PassengerSegment::getAllowedBaggageWeight() const
     return allowedWeight;
 }
 
-void PassengerSegment::add(std::shared_ptr<HumanUnitI> person)
+void PassengerSegment::registerBaggage(std::shared_ptr<HumanUnitI> person)
+{
+    int baggageWeight = person->getBaggageWeight();
+    int baggageWeightLeft = allowedWeight - currentBaggageWeight;
+    int toReleaseWeight = baggageWeight - baggageWeightLeft;
+
+    while (toReleaseWeight > 0)
+    {
+        auto maxBaggagePersonIter = std::max_element(persons.begin(), persons.end(), 
+        [](const std::shared_ptr<HumanUnitI>& personA, const std::shared_ptr<HumanUnitI>& personB) {
+            // Находим максимальный вес среди багажа для каждого пассажира
+            int maxWeightA = 0;
+            if (!personA->getBaggagePositions().empty()) {
+                maxWeightA = std::max_element(personA->getBaggagePositions().begin(), personA->getBaggagePositions().end(),
+                    [](const BaggagePos& a, const BaggagePos& b) {
+                        return a.weight < b.weight; // Сравниваем по весу
+                    })->weight;
+            }
+
+            int maxWeightB = 0;
+            if (!personB->getBaggagePositions().empty()) {
+                maxWeightB = std::max_element(personB->getBaggagePositions().begin(), personB->getBaggagePositions().end(),
+                    [](const BaggagePos& a, const BaggagePos& b) {
+                        return a.weight < b.weight; // Сравниваем по весу
+                    })->weight;
+            }
+            
+            return maxWeightA < maxWeightB; // Сравниваем максимальные веса
+        });
+
+        auto personWithMaxBaggage = *maxBaggagePersonIter;
+        if (auto personWithBaggageHandler = std::dynamic_pointer_cast<FlexibleBaggageI>(personWithMaxBaggage))
+        {
+            int realesedWeight = personWithBaggageHandler->dropBiggestBaggagePosition();
+            if (auto personIdentifiable = std::dynamic_pointer_cast<IdentifiableI>(personWithMaxBaggage))
+            {
+                std::string personId = personIdentifiable->getId();
+                std::cout << "!!PASSENGER'S BAGGAGE REMOVED FROM FLIGHT, ID = {" << personId << "}!!\n";
+            }
+            else
+            {
+                std::cout << "ERROR; Unable to get person id" << '\n';
+
+                return;
+            }
+
+            toReleaseWeight -= realesedWeight;
+            currentBaggageWeight -= realesedWeight;
+        }
+        else
+        {
+            std::cout << "ERROR; Unable to drop person baggage" << '\n';
+
+            return;
+        }
+    }
+
+    currentBaggageWeight += baggageWeight;
+    transfered.push_back(person);
+}
+
+ReturnCodeType PassengerSegment::add(std::shared_ptr<HumanUnitI> person)
 {
     if (!person->invariant())
     {
         std::cout << "ERROR: Can't add new passanger bc of limits" << '\n';
-        return;
+        return ReturnCodeType::ALLOCATED;
     }
 
     int baggageWeightLeft = allowedWeight - currentBaggageWeight;
+
+    if (std::holds_alternative<PassengerSegmentType>(person->getType())) {
+        PassengerSegmentType segmentType = std::get<PassengerSegmentType>(person->getType());
+
+        if (segmentType == PassengerSegmentType::BUSINESS || 
+            segmentType == PassengerSegmentType::FIRST_CLASS) {
+            if (person->getBaggageWeight() > baggageWeightLeft) {
+                persons.push_back(person);
+                currentLuggageWeight += person->getLuggageWeight();
+
+                return ReturnCodeType::NEED_TRANSFER;
+            }
+        }
+    }
+
     while (person->getBaggageWeight() > baggageWeightLeft)
     {
         if (auto personWithBaggageHandler = std::dynamic_pointer_cast<FlexibleBaggageI>(person)) {
-            personWithBaggageHandler->dropSmallestBaggagePosition();
+            personWithBaggageHandler->dropBiggestBaggagePosition();
 
             if (auto personIdentifiable = std::dynamic_pointer_cast<IdentifiableI>(person))
             {
@@ -252,6 +337,8 @@ void PassengerSegment::add(std::shared_ptr<HumanUnitI> person)
 
     currentBaggageWeight += person->getBaggageWeight();
     currentLuggageWeight += person->getLuggageWeight();
+
+    return ReturnCodeType::ALLOCATED;
 }
 
 void PassengerSegment::remove(std::shared_ptr<HumanUnitI> person) {
@@ -260,6 +347,11 @@ void PassengerSegment::remove(std::shared_ptr<HumanUnitI> person) {
 
 std::variant<PassengerSegmentType, CrewMemberType> PassengerSegment::getType() const {
     return type;
+}
+
+FixedVector<BaggagePos> PassengerSegment::getBaggagePositions() const
+{
+    return persons[0]->getBaggagePositions();
 }
 
 void PassengerSegment::showInfo() const {
@@ -273,5 +365,28 @@ void PassengerSegment::showInfo() const {
 
     for (const auto & person : persons) {
         person->showInfo();
+    }
+
+    if (!transfered.empty())
+    {
+        std::cout << "TRANSFERED BAGGAGE INFO:\n\n";
+        std::cout << "Transfered " << transfered.size() << " passengers;\n";
+
+        for (const auto & person : transfered)
+        {   
+            int personRegisteredBaggage = person->getBaggageWeight();
+            if (auto personIdentifiable = std::dynamic_pointer_cast<IdentifiableI>(person))
+            {
+                std::string personId = personIdentifiable->getId();
+
+                std::cout << "Place baggage of person with id: " << personId
+                          << " with total weight: " << personRegisteredBaggage << " kg.\n";
+            }
+            else
+            {
+                std::cout << "ERROR; Unable to get person id" << '\n';
+            }
+            
+        }
     }
 }

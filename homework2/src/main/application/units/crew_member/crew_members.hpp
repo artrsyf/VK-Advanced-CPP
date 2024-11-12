@@ -23,6 +23,8 @@ public:
 
     std::variant<PassengerSegmentType, CrewMemberType> getType() const override;
 
+    FixedVector<BaggagePos> getBaggagePositions() const override;
+
     void showInfo() const override;
 
 private:
@@ -45,13 +47,17 @@ public:
 
     int getLuggageWeight() const override;
 
+    void registerBaggage(std::shared_ptr<HumanUnitI> person) override { /* NOT IMPLEMENTED */ };
+
     int getAllowedBaggageWeight() const override;
 
     std::variant<PassengerSegmentType, CrewMemberType> getType() const override;
 
-    void add(std::shared_ptr<HumanUnitI> person) override;
+    ReturnCodeType add(std::shared_ptr<HumanUnitI> person) override;
 
     void remove(std::shared_ptr<HumanUnitI> person) override;
+
+    FixedVector<BaggagePos> getBaggagePositions() const override;
 
     void showInfo() const override;
 

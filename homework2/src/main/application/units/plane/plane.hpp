@@ -15,6 +15,8 @@ public:
     int getLuggageWeight() const override;
 
     int getBaggageWeight() const override;
+    
+    void transferPersonBaggage(std::shared_ptr<HumanUnitI> person);
 
     void addPassenger(std::shared_ptr<HumanUnitI> person);
 

@@ -34,12 +34,23 @@ int Plane::getBaggageWeight() const
     return acc;
 }
 
+void Plane::transferPersonBaggage(std::shared_ptr<HumanUnitI> person)
+{
+    EnumVariant economyVariant = PassengerSegmentType::ECONOMY;
+    auto economySegment = getSegmentByType(economyVariant);
+    economySegment->registerBaggage(person);
+}
+
 void Plane::addPassenger(std::shared_ptr<HumanUnitI> person)
 {
     auto segment = person->getType();
     auto personSegment = getSegmentByType(person->getType());
 
-    personSegment->add(person);
+    ReturnCodeType codeType = personSegment->add(person);
+    if (codeType == ReturnCodeType::NEED_TRANSFER)
+    {
+        transferPersonBaggage(person);
+    }
 }
 
 void Plane::add(std::shared_ptr<UnitSegmentI> segment) {

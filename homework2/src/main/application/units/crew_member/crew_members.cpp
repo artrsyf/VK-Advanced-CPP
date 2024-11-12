@@ -21,6 +21,11 @@ std::variant<PassengerSegmentType, CrewMemberType> CrewMember::getType() const
     return type;
 }
 
+FixedVector<BaggagePos> CrewMember::getBaggagePositions() const
+{
+    return FixedVector<BaggagePos>();
+}
+
 void CrewMember::showInfo() const
 {
     std::cout << "Crew member: " << id << ", The " << mapCrewToString(type) << std::endl;
@@ -62,7 +67,7 @@ std::variant<PassengerSegmentType, CrewMemberType> CrewSegment::getType() const
     return type;
 }
 
-void CrewSegment::add(std::shared_ptr<HumanUnitI> person)
+ReturnCodeType CrewSegment::add(std::shared_ptr<HumanUnitI> person)
 {
     if (person->invariant())
     {
@@ -75,10 +80,17 @@ void CrewSegment::add(std::shared_ptr<HumanUnitI> person)
     {
         std::cout << "Can't add new passanger" << '\n';
     }
+
+    return ReturnCodeType::ALLOCATED;
 }
 
 void CrewSegment::remove(std::shared_ptr<HumanUnitI> person) {
     persons.erase(std::remove(persons.begin(), persons.end(), person), persons.end());
+}
+
+FixedVector<BaggagePos> CrewSegment::getBaggagePositions() const
+{
+    return persons[0]->getBaggagePositions();
 }
 
 void CrewSegment::showInfo() const {
