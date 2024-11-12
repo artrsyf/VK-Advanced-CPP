@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <map>
 #include <iostream>
 
 const std::string FIRST_CLASS_SEGMENT = "FIRST_CLASS_SEGMENT";
@@ -17,6 +18,14 @@ enum class PassengerSegmentType
     BUSINESS,
     FIRST_CLASS
 };
+
+const std::map<PassengerSegmentType, int> segmentCapacityBind = {
+    {PassengerSegmentType::ECONOMY, 200},
+    {PassengerSegmentType::BUSINESS, 10},
+    {PassengerSegmentType::FIRST_CLASS, 4}
+};
+
+
 
 std::string mapSegmentToString(PassengerSegmentType segmentType);
 

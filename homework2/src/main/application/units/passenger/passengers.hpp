@@ -65,9 +65,10 @@ private:
 class PassengerSegment : public UnitSegmentI 
 {
 public:
-    PassengerSegment(int _allowedWeight, PassengerSegmentType _type) :
+    PassengerSegment(int _allowedWeight, PassengerSegmentType _type, int _passengersCapacity) :
         type(_type),
         allowedWeight(_allowedWeight),
+        passengersCapacity(_passengersCapacity),
         currentBaggageWeight(0),
         currentLuggageWeight(0) {}
 
@@ -94,6 +95,7 @@ public:
 private:
     PassengerSegmentType type;
     int allowedWeight;
+    int passengersCapacity;
     int currentBaggageWeight;
     int currentLuggageWeight;
     std::vector<std::shared_ptr<HumanUnitI>> persons;

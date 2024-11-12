@@ -48,7 +48,8 @@ void run(std::istream & input, std::ostream & output)
     {
         input >> segmentTypeString >> boundWeight;
         PassengerSegmentType segmentTypeEnum = mapStringToSegmentType(segmentTypeString);
-        plane.add(std::make_shared<PassengerSegment>(PassengerSegment(boundWeight, segmentTypeEnum)));
+        int maxNum = segmentCapacityBind.at(segmentTypeEnum);
+        plane.add(std::make_shared<PassengerSegment>(PassengerSegment(boundWeight, segmentTypeEnum, maxNum)));
     }
 
     plane.add(std::make_shared<CrewSegment>(CrewSegment(0, CrewMemberType::PILOT)));

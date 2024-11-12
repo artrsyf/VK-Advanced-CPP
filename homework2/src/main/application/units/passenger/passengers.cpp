@@ -290,19 +290,22 @@ void PassengerSegment::registerBaggage(std::shared_ptr<HumanUnitI> person)
 
 ReturnCodeType PassengerSegment::add(std::shared_ptr<HumanUnitI> person)
 {
-    if (!person->invariant())
-    {
-        std::cout << "ERROR: Can't add new passanger bc of limits" << '\n';
-        return ReturnCodeType::ALLOCATED;
-    }
-
     int weightLeft = allowedWeight - currentBaggageWeight - currentLuggageWeight;
-    if (person->getLuggageWeight() > weightLeft)
+
+    if (!person->invariant() ||
+        persons.size() == passengersCapacity ||
+        person->getLuggageWeight() > weightLeft
+    )
     {
-        /* Выкинуть пассажира */
+        /* Выкинуть пассажира если
+            1. Он не сохранаяет свой инвариант;
+            2. Банально нет мест;
+            3. Он не может поместить свою ручную кладь.
+        */
         std::cout << "!!CANT REGISTER {TYPE} PASSENGER, ID = {ID}!!\n";
         return ReturnCodeType::ALLOCATED;
     }
+    
     currentLuggageWeight += person->getLuggageWeight();
     weightLeft = allowedWeight - currentBaggageWeight - currentLuggageWeight;
 
