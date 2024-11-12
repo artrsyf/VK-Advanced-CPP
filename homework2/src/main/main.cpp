@@ -2,8 +2,17 @@
 #include <sstream>
 #include <string>
 #include <limits>
+#include <chrono>
 
 #include "application/units/plane/plane.hpp"
+
+std::string generateUniqueID()
+{
+    auto now = std::chrono::system_clock::now();
+    auto duration = now.time_since_epoch();
+
+    return std::to_string(duration.count());
+}
 
 std::shared_ptr<Passenger> createPassengerFromInput(const std::string &input)
 {
@@ -12,7 +21,7 @@ std::shared_ptr<Passenger> createPassengerFromInput(const std::string &input)
     ss >> segmentTypeString;
 
     PassengerSegmentType segment = mapPassengerStringToSegmentType(segmentTypeString);
-    std::shared_ptr<Passenger> passenger = std::make_shared<Passenger>("Some ID", segment);
+    std::shared_ptr<Passenger> passenger = std::make_shared<Passenger>(generateUniqueID(), segment);
 
     if (segment == PassengerSegmentType::ECONOMY)
     {
@@ -62,7 +71,7 @@ void run(std::istream & input, std::ostream & output)
     {
         input >> typeString >> boundBaggageMock1 >> boundBaggageMock2;
         CrewMemberType typeEnum = mapStringToCrew(typeString);
-        std::shared_ptr<CrewMember> crewMember = std::make_shared<CrewMember>("Some Crew ID", typeEnum);
+        std::shared_ptr<CrewMember> crewMember = std::make_shared<CrewMember>(generateUniqueID(), typeEnum);
 
         // crewMember->showInfo();
         plane.addPassenger(crewMember);
