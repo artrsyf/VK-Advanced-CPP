@@ -1,5 +1,4 @@
-#ifndef UNIT_HPP
-#define UNIT_HPP
+#pragma once
 
 #include "enums/passenger_segment_type.hpp"
 #include "enums/crew_member_type.hpp"
@@ -20,6 +19,18 @@ public:
     virtual ~UnitI() = default;   
 };
 
+class IdentifiableI
+{
+public:
+    virtual std::string getId() const = 0;
+};
+
+class FlexibleBaggageI
+{
+public:
+    virtual void dropSmallestBaggagePosition() = 0;
+};
+
 class HumanUnitI : public UnitI
 {
 public:
@@ -34,5 +45,3 @@ public:
     virtual int getAllowedBaggageWeight() const = 0;
     virtual ~UnitSegmentI() = default;
 };
-
-#endif

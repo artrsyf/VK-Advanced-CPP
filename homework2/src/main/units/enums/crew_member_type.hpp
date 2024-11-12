@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <iostream>
 
@@ -10,28 +12,6 @@ enum class CrewMemberType
     FLIGHT_ATTENDANT,
 };
 
-std::string mapCrewToString(CrewMemberType type)
-{
-    switch (type)
-    {
-    case CrewMemberType::PILOT:
-        return "Pilot";
+std::string mapCrewToString(CrewMemberType type);
 
-    case CrewMemberType::FLIGHT_ATTENDANT:
-        return "Flight attendant";
-    
-    default:
-        return "Unknown";
-    }
-}
-
-CrewMemberType mapStringToCrew(std::string typeString) {
-    if (typeString == PILOT) {
-        return CrewMemberType::PILOT;
-    } else if (typeString == FLIGHT_ATTENDANT ) {
-        return CrewMemberType::FLIGHT_ATTENDANT;
-    } else {
-        std::cout << "Unrecognized crew member type" << std::endl;
-        return CrewMemberType::FLIGHT_ATTENDANT;
-    }
-}
+CrewMemberType mapStringToCrew(std::string typeString);

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <iostream>
 #include <memory>
@@ -6,6 +8,7 @@
 #include <limits>
 #include <numeric>
 #include <iterator>
+#include <variant>
 
 #include "unit.hpp"
 
@@ -26,6 +29,22 @@ public:
     void initialize(size_t size) {
         if (!data.empty()) throw std::runtime_error("Already initialized");
         maxSize = size;
+    }
+
+    template <typename Criteria>
+    void removeMaxByCriteria(Criteria criterion) {
+        if (data.empty()) {
+            std::cout << "Can't remove element, struct is empty." << '\n';
+        }
+
+        // Найдем итератор на элемент с максимальным значением критерия
+        auto maxIt = std::max_element(data.begin(), data.end(),
+                                      [&](const T& a, const T& b) {
+                                          return criterion(a) < criterion(b);
+                                      });
+
+        // Удаляем найденный элемент
+        data.erase(maxIt);
     }
 
     // Метод для добавления элемента с проверкой на переполнение
@@ -102,7 +121,7 @@ struct BaggagePermission
     BaggagePermission(int _allowedQuantity, int _allowedWeight) : allowedQuantity(_allowedQuantity), allowedWeight(_allowedWeight) {}
 };
 
-class Passenger : public HumanUnitI 
+class Passenger : public HumanUnitI, public FlexibleBaggageI, public IdentifiableI
 {
 public:
     Passenger(
@@ -116,134 +135,24 @@ public:
         baggage.initialize(getBaggagePermission(passengerSegment).allowedQuantity);
     }
 
-    bool invariant() const override
-    {
-        BaggagePermission baggagePermission = getBaggagePermission(passengerSegment);
-        int baggageQuantityBound = baggagePermission.allowedQuantity;
-        int baggageWeightBound = baggagePermission.allowedWeight;
-        int baggageWeight = getBaggageWeight();
+    bool invariant() const override;
 
-        HandLuggagePermission luggagePermission = getHandLuggagePermission(passengerSegment);
-        int luggageQuantityBound = luggagePermission.allowedQuantity;
-        int luggageWeightBound = luggagePermission.allowedWeight;
-        int luggageWeight = getLuggageWeight();
+    int getBaggageWeight() const override;
 
-        return baggage.size() <= baggageQuantityBound &&
-            baggageWeight <= baggageWeightBound &&
+    int getLuggageWeight() const override;
 
-            luggage.size() <= luggageQuantityBound &&
-            luggageWeight <= luggageWeightBound;
-    }
+    std::variant<PassengerSegmentType, CrewMemberType> getType() const override;
 
-    int getBaggageWeight() const override
-    {
-        int acc = 0;
+    void addBaggageItem(int weight);
 
-        for (const auto & baggageItem : baggage)
-        {
-            acc += baggageItem.weight;
-        }
+    void addLuggageItem(int weight);
 
-        return acc;
-    }
+    std::string getId() const override;
 
-    int getLuggageWeight() const override
-    {
-        int acc = 0;
-
-        for (const auto & luggageItem : luggage)
-        {
-            acc += luggageItem.weight;
-        }
-
-        return acc;
-    }
-
-    std::variant<PassengerSegmentType, CrewMemberType> getType() const override
-    {
-        return passengerSegment;
-    }
-
-    void addBaggageItem(int weight)
-    {
-        BaggagePermission permission = getBaggagePermission(passengerSegment);
-        int quantityBound = permission.allowedQuantity;
-        int weightBound = permission.allowedWeight;
-
-        if (baggage.size() >= quantityBound)
-        {
-            std::cout << "Error: Cannot add more baggage items. Maximum allowed: " 
-                      << quantityBound << std::endl;
-
-            return;
-        }
-
-        if (weight > weightBound) {
-            std::cout << "Error: Item weight exceeds the limit of " 
-                      << weightBound << " kg per item." << std::endl;
-
-            return;
-        }
-
-        baggage.add(weight);
-    }
-
-    void addLuggageItem(int weight)
-    {
-        HandLuggagePermission permission = getHandLuggagePermission(passengerSegment);
-        int quantityBound = permission.allowedQuantity;
-        int weightBound = permission.allowedWeight;
-
-        if (luggage.size() >= quantityBound)
-        {
-            std::cout << "Error: Cannot add more luggage items. Maximum allowed: " 
-                      << quantityBound << std::endl;
-
-            return;
-        }
-
-        if (weight > weightBound) {
-            std::cout << "Error: Item weight exceeds the limit of " 
-                      << weightBound << " kg per item." << std::endl;
-
-            return;
-        }
-
-        luggage.add(weight);
-    }
+    void dropSmallestBaggagePosition() override;
     
-    void showInfo() const override
-    {
-        BaggagePermission baggagePermission = getBaggagePermission(passengerSegment);
-        int baggageQuantityBound = baggagePermission.allowedQuantity;
-        int baggageWeightBound = baggagePermission.allowedWeight;
-        int baggageWeight = getBaggageWeight();
+    void showInfo() const override;
 
-        HandLuggagePermission luggagePermission = getHandLuggagePermission(passengerSegment);
-        int luggageQuantityBound = luggagePermission.allowedQuantity;
-        int luggageWeightBound = luggagePermission.allowedWeight;
-        int luggageWeight = getLuggageWeight();
-
-        std::cout << "Passenger: " << id << std::endl;
-        std::cout << "Segment: " << mapSegmentToString(passengerSegment) << std::endl;
-
-        std::cout << "Allowed baggage: " << baggageQuantityBound
-                  << " items, " << baggageWeightBound << " kg per item" << std::endl;
-        std::cout << "Allowed luggage: " << luggageQuantityBound
-                  << " items, " << luggageWeightBound << " kg per item" << std::endl;
-
-        std::cout << "Actual baggage: " << baggage.size() << " items" << std::endl;
-        for (size_t i = 0; i < baggage.size(); ++i) {
-            std::cout << " - Item " << (i + 1) << ": " << baggage[i].weight << " kg" << std::endl;
-        }
-        std::cout << "Baggage weight: " << getBaggageWeight() << std::endl;
-
-        std::cout << "Actual luggage: " << luggage.size() << " items" << std::endl;
-        for (size_t i = 0; i < luggage.size(); ++i) {
-            std::cout << " - Item " << (i + 1) << ": " << luggage[i].weight << " kg" << std::endl;
-        }
-        std::cout << "Luggage weight: " << getLuggageWeight() << std::endl;
-    }
 private:
     std::string id;
     PassengerSegmentType passengerSegment;
@@ -251,45 +160,9 @@ private:
     FixedVector<LuggagePos> luggage;
     FixedVector<BaggagePos> baggage;
 
-    static HandLuggagePermission getHandLuggagePermission(PassengerSegmentType bookedPassengerSegmentType)
-    {
-        switch (bookedPassengerSegmentType)
-        {
-        case PassengerSegmentType::ECONOMY:
-            return HandLuggagePermission(1, 10); 
+    static HandLuggagePermission getHandLuggagePermission(PassengerSegmentType bookedPassengerSegmentType);
 
-        case PassengerSegmentType::BUSINESS:
-            return HandLuggagePermission(2, 24); 
-
-        case PassengerSegmentType::FIRST_CLASS:
-            return HandLuggagePermission(2, 60); 
-        
-        default:
-            /* Error handling */
-        
-            break;
-        }
-    }
-
-    static BaggagePermission getBaggagePermission(PassengerSegmentType bookedPassengerSegment)
-    {
-        switch (bookedPassengerSegment)
-        {
-        case PassengerSegmentType::ECONOMY:
-            return BaggagePermission(1, 24);
-
-        case PassengerSegmentType::BUSINESS:
-            return BaggagePermission(2, 40);
-
-        case PassengerSegmentType::FIRST_CLASS:
-            return BaggagePermission(2, INFINITY);
-        
-        default:
-            /* Error handling */
-        
-            break;
-        }
-    }
+    static BaggagePermission getBaggagePermission(PassengerSegmentType bookedPassengerSegment);
 };
 
 struct BaggageSegmentSpacePermission
@@ -308,67 +181,21 @@ public:
         currentBaggageWeight(0),
         currentLuggageWeight(0) {}
 
-    bool invariant() const override
-    {
-        for (const auto & person : persons)
-        {
-            if (!person->invariant()) return false;
-        }
+    bool invariant() const override;
 
-        return currentBaggageWeight <= allowedWeight;
-    }
+    int getBaggageWeight() const override;
 
-    int getBaggageWeight() const override
-    {
-        return currentBaggageWeight;
-    }
+    int getLuggageWeight() const override;
 
-    int getLuggageWeight() const override
-    {
-        return currentLuggageWeight;
-    }
+    int getAllowedBaggageWeight() const override;
 
-    int getAllowedBaggageWeight() const override
-    {
-        return allowedWeight;
-    }
+    void add(std::shared_ptr<HumanUnitI> person) override;
 
-    void add(std::shared_ptr<HumanUnitI> person) override
-    {
-        if (person->invariant())
-        {
-            persons.push_back(person);
+    void remove(std::shared_ptr<HumanUnitI> person) override;
 
-            currentBaggageWeight += person->getBaggageWeight();
-            currentLuggageWeight += person->getLuggageWeight();
-        } 
-        else
-        {
-            std::cout << "Can't add new passanger" << '\n';
-        }
-    }
+    std::variant<PassengerSegmentType, CrewMemberType> getType() const override;
 
-    void remove(std::shared_ptr<HumanUnitI> person) override {
-        persons.erase(std::remove(persons.begin(), persons.end(), person), persons.end());
-    }
-
-    std::variant<PassengerSegmentType, CrewMemberType> getType() const override {
-        return type;
-    }
-
-    void showInfo() const override {
-        std::cout << "INFO: Segment " << mapSegmentToString(type) << "\n\n";
-
-        std::cout << "Luggage load: " << currentLuggageWeight << " kg;" << '\n';
-        std::cout << "Baggage bound load: " << allowedWeight << " kg;" << '\n';
-        std::cout << "Baggage load: " << currentBaggageWeight << " kg;" << "\n\n";
-
-        std::cout << "EACH PERSON INFO:\n\n";
-
-        for (const auto & person : persons) {
-            person->showInfo();
-        }
-    }
+    void showInfo() const override;
 
 private:
     PassengerSegmentType type;
