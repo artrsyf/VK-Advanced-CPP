@@ -26,7 +26,8 @@ OBJS = $(SRCS:.cpp=.o)
 MAIN_SRC = $(SRC_DIR)/main.cpp
 MAIN_OBJS = $(MAIN_SRC:.cpp=.o)
 
-TEST_SRCS = $(TEST_DIR)/application/units/passenger/passenger_test.cpp
+TEST_SRCS = $(TEST_DIR)/test.cpp
+# TEST_SRCS = $(TEST_DIR)/shared/enums/passenger_segment_type/passenger_segment_type_test.cpp
 TEST_OBJS = $(TEST_SRCS:.cpp=.o)
 
 COVERAGE_GCNO = $(SRCS:.cpp=.gcno) \
@@ -57,11 +58,12 @@ test: $(TEST_TARGET)
 coverage: $(TEST_TARGET)
 	./$(TEST_TARGET)
 	lcov --capture --directory . --output-file coverage.info
-	genhtml coverage.info --output-directory coverage_report
+	lcov --remove coverage.info "/usr/include/*" --output-file coverage_filtered.info
+	genhtml coverage_filtered.info --output-directory coverage_report
 
 # Очистка сгенерированных файлов
 clean:
-	rm -f $(OBJS) $(MAIN_OBJS) $(TEST_OBJS) $(TARGET) $(TEST_TARGET) $(COVERAGE_GCNO) $(COVERAGE_GCDA) coverage.info
+	rm -f $(OBJS) $(MAIN_OBJS) $(TEST_OBJS) $(TARGET) $(TEST_TARGET) $(COVERAGE_GCNO) $(COVERAGE_GCDA) coverage.info coverage_filtered.info
 	rm -rf coverage_report
 
 # Файл .PHONY нужен, чтобы make не пытался интерпретировать clean как файл
