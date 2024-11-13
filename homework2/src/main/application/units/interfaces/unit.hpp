@@ -48,7 +48,6 @@ class UnitSegmentI : public HumanUnitI
 {
 public:
     virtual ReturnCodeType add(std::shared_ptr<HumanUnitI> person) = 0;
-    virtual void remove(std::shared_ptr<HumanUnitI> person) = 0;
     virtual void registerBaggage(std::shared_ptr<HumanUnitI> person) = 0;
     virtual int getAllowedWeight() const = 0;
     virtual ~UnitSegmentI() = default;

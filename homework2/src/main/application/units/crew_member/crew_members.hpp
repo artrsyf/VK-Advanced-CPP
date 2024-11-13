@@ -55,8 +55,6 @@ public:
 
     ReturnCodeType add(std::shared_ptr<HumanUnitI> person) override;
 
-    void remove(std::shared_ptr<HumanUnitI> person) override;
-
     FixedVector<BaggagePos> getBaggagePositions() const override;
 
     void showInfo() const override;

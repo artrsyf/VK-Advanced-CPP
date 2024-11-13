@@ -7,6 +7,8 @@
 
 using EnumVariant = std::variant<PassengerSegmentType, CrewMemberType>;
 
+class PlaneTestSuite;
+
 class Plane : public UnitI
 {
 public:
@@ -22,8 +24,6 @@ public:
 
     void add(std::shared_ptr<UnitSegmentI> segment);
 
-    void remove(std::shared_ptr<UnitSegmentI> segment);
-
     void showInfo() const override;
 
 private:
@@ -31,4 +31,6 @@ private:
     
     template <typename EnumType>
     std::shared_ptr<UnitSegmentI> getSegmentByType(EnumType type);
+
+    friend class PlaneTestSuite;
 };

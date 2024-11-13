@@ -239,16 +239,18 @@ void PassengerSegment::registerBaggage(std::shared_ptr<HumanUnitI> person)
         [](const std::shared_ptr<HumanUnitI>& personA, const std::shared_ptr<HumanUnitI>& personB) {
             // Находим максимальный вес среди багажа для каждого пассажира
             int maxWeightA = 0;
-            if (!personA->getBaggagePositions().empty()) {
-                maxWeightA = std::max_element(personA->getBaggagePositions().begin(), personA->getBaggagePositions().end(),
+            auto personABaggagePositions = personA->getBaggagePositions();
+            if (!personABaggagePositions.empty()) {
+                maxWeightA = std::max_element(personABaggagePositions.begin(), personABaggagePositions.end(),
                     [](const BaggagePos& a, const BaggagePos& b) {
                         return a.weight < b.weight; // Сравниваем по весу
                     })->weight;
             }
 
             int maxWeightB = 0;
-            if (!personB->getBaggagePositions().empty()) {
-                maxWeightB = std::max_element(personB->getBaggagePositions().begin(), personB->getBaggagePositions().end(),
+            auto personBBaggagePositions = personB->getBaggagePositions();
+            if (!personBBaggagePositions.empty()) {
+                maxWeightB = std::max_element(personBBaggagePositions.begin(), personBBaggagePositions.end(),
                     [](const BaggagePos& a, const BaggagePos& b) {
                         return a.weight < b.weight; // Сравниваем по весу
                     })->weight;
@@ -362,10 +364,6 @@ ReturnCodeType PassengerSegment::add(std::shared_ptr<HumanUnitI> person)
     currentBaggageWeight += person->getBaggageWeight();
     
     return ReturnCodeType::ALLOCATED;
-}
-
-void PassengerSegment::remove(std::shared_ptr<HumanUnitI> person) {
-    persons.erase(std::remove(persons.begin(), persons.end(), person), persons.end());
 }
 
 std::variant<PassengerSegmentType, CrewMemberType> PassengerSegment::getType() const {

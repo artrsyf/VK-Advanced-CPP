@@ -1,4 +1,5 @@
 #include "plane.hpp"
+#include "../../../../test/application/units/plane/plane_test.hpp"
 
 bool Plane::invariant() const
 {
@@ -64,10 +65,6 @@ void Plane::add(std::shared_ptr<UnitSegmentI> segment) {
     }
 }
 
-void Plane::remove(std::shared_ptr<UnitSegmentI> segment) {
-    segments.erase(std::remove(segments.begin(), segments.end(), segment), segments.end());
-}
-
 void Plane::showInfo() const {
     std::cout << "INFO: Plane load:" << "\n\n";
 
@@ -85,7 +82,7 @@ void Plane::showInfo() const {
     std::cout << "TOTAL:\n\n";
     std::cout << "Total luggage weight: " << totalLuggageWeight << " kg;\n";
     std::cout << "Total baggage weight: " << totalBaggageWeight << " kg;\n";
-    std::cout << "Total load: " << totalBaggageWeight + totalLuggageWeight << "/" << allowedWeight << "kg.";
+    std::cout << "Total load: " << totalBaggageWeight + totalLuggageWeight << "/" << allowedWeight << "kg.\n";
 }
 
 template <typename EnumType>

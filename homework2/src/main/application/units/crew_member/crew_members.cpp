@@ -84,10 +84,6 @@ ReturnCodeType CrewSegment::add(std::shared_ptr<HumanUnitI> person)
     return ReturnCodeType::ALLOCATED;
 }
 
-void CrewSegment::remove(std::shared_ptr<HumanUnitI> person) {
-    persons.erase(std::remove(persons.begin(), persons.end(), person), persons.end());
-}
-
 FixedVector<BaggagePos> CrewSegment::getBaggagePositions() const
 {
     return persons[0]->getBaggagePositions();

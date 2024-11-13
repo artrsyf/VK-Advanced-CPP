@@ -84,8 +84,6 @@ public:
 
     ReturnCodeType add(std::shared_ptr<HumanUnitI> person) override;
 
-    void remove(std::shared_ptr<HumanUnitI> person) override;
-
     std::variant<PassengerSegmentType, CrewMemberType> getType() const override;
 
     void showInfo() const override;
