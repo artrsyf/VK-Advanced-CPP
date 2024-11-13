@@ -62,7 +62,7 @@ coverage: $(TEST_TARGET)
 
 # Очистка сгенерированных файлов
 clean:
-	rm -f $(OBJS) $(MAIN_OBJS) $(TEST_OBJS) $(TARGET) $(TEST_TARGET) $(COVERAGE_GCNO) $(COVERAGE_GCDA) coverage.info coverage_filtered.info
+	rm -f $(OBJS) $(MAIN_OBJS) $(TEST_OBJS) $(TARGET) $(TARGET).exe $(TEST_TARGET) $(TEST_TARGET).exe $(COVERAGE_GCNO) $(COVERAGE_GCDA) coverage.info coverage_filtered.info
 	rm -rf coverage_report
 
 # Файл .PHONY нужен, чтобы make не пытался интерпретировать clean как файл
