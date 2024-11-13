@@ -12,10 +12,10 @@ bool Passenger::invariant() const
     int luggageWeightBound = luggagePermission.allowedWeight;
     int luggageWeight = getLuggageWeight();
 
-    return baggage.size() <= baggageQuantityBound &&
+    return baggage.size() <= static_cast<size_t>(baggageQuantityBound) &&
         baggageWeight <= baggageWeightBound &&
 
-        luggage.size() <= luggageQuantityBound &&
+        luggage.size() <= static_cast<size_t>(luggageQuantityBound) &&
         luggageWeight <= luggageWeightBound;
 }
 
@@ -54,7 +54,7 @@ void Passenger::addBaggageItem(int weight)
     int quantityBound = permission.allowedQuantity;
     int weightBound = permission.allowedWeight;
 
-    if (baggage.size() >= quantityBound)
+    if (baggage.size() >= static_cast<size_t>(quantityBound))
     {
         std::cout << "Error: Cannot add more baggage items. Maximum allowed: " 
                     << quantityBound << std::endl; // Verbose
@@ -85,7 +85,7 @@ void Passenger::addLuggageItem(int weight)
     int quantityBound = permission.allowedQuantity;
     int weightBound = permission.allowedWeight;
 
-    if (luggage.size() >= quantityBound)
+    if (luggage.size() >= static_cast<size_t>(quantityBound))
     {
         std::cout << "Error: Cannot add more luggage items. Maximum allowed: " 
                     << quantityBound << std::endl; // Verbose
@@ -134,12 +134,10 @@ void Passenger::showInfo() const
     BaggagePermission baggagePermission = getBaggagePermission(passengerSegment);
     int baggageQuantityBound = baggagePermission.allowedQuantity;
     int baggageWeightBound = baggagePermission.allowedWeight;
-    int baggageWeight = getBaggageWeight();
 
     HandLuggagePermission luggagePermission = getHandLuggagePermission(passengerSegment);
     int luggageQuantityBound = luggagePermission.allowedQuantity;
     int luggageWeightBound = luggagePermission.allowedWeight;
-    int luggageWeight = getLuggageWeight();
 
     std::cout << "Passenger: " << id << std::endl;
     std::cout << "Segment: " << mapSegmentToString(passengerSegment) << std::endl;
@@ -178,7 +176,7 @@ HandLuggagePermission Passenger::getHandLuggagePermission(PassengerSegmentType b
     default:
         /* Error handling */
     
-        break;
+        throw std::invalid_argument("Unknown PassengerSegmentType");
     }
 }
 
@@ -198,7 +196,7 @@ BaggagePermission Passenger::getBaggagePermission(PassengerSegmentType bookedPas
     default:
         /* Error handling */
     
-        break;
+        throw std::invalid_argument("Unknown PassengerSegmentType");
     }
 }
 
@@ -295,7 +293,7 @@ ReturnCodeType PassengerSegment::add(std::shared_ptr<HumanUnitI> person)
     int weightLeft = allowedWeight - currentBaggageWeight - currentLuggageWeight;
 
     if (!person->invariant() ||
-        persons.size() == passengersCapacity ||
+        persons.size() == static_cast<size_t>(passengersCapacity) ||
         person->getLuggageWeight() > weightLeft
     )
     {

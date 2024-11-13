@@ -46,7 +46,7 @@ std::shared_ptr<Passenger> createPassengerFromInput(const std::string &input)
     return passenger;
 }
 
-void run(std::istream & input, std::ostream & output)
+void run(std::istream & input, [[maybe_unused]] std::ostream & output)
 {
     Plane plane = Plane();
 
