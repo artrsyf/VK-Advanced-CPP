@@ -4,8 +4,8 @@ TEST_TARGET = test_executable
 
 # Компилятор и флаги компиляции
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -g --coverage
-# CXXFLAGS = -std=c++17 -Wall -Wextra -Werror -g --coverage -O0 -fsanitize=address
+# CXXFLAGS = -std=c++17 -Wall -g --coverage
+CXXFLAGS = -std=c++17 -Wall -Wextra -Werror -g --coverage -O0 -fsanitize=address
 
 # Папка с исходниками
 ROOT_DIR = ../
@@ -27,7 +27,6 @@ MAIN_SRC = $(SRC_DIR)/main.cpp
 MAIN_OBJS = $(MAIN_SRC:.cpp=.o)
 
 TEST_SRCS = $(TEST_DIR)/test.cpp
-# TEST_SRCS = $(TEST_DIR)/shared/enums/passenger_segment_type/passenger_segment_type_test.cpp
 TEST_OBJS = $(TEST_SRCS:.cpp=.o)
 
 COVERAGE_GCNO = $(SRCS:.cpp=.gcno) \
