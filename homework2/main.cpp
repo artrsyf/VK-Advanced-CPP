@@ -74,7 +74,6 @@ void run(std::istream& input, [[maybe_unused]] std::ostream& output)
         CrewMemberType typeEnum = mapStringToCrew(typeString);
         std::shared_ptr<CrewMember> crewMember = std::make_shared<CrewMember>(generateUniqueID(), typeEnum);
 
-        // crewMember->showInfo();
         plane.addPassenger(crewMember);
     }
 
@@ -86,8 +85,6 @@ void run(std::istream& input, [[maybe_unused]] std::ostream& output)
         std::shared_ptr<Passenger> passenger = createPassengerFromInput(inputString);
         plane.addPassenger(passenger);
     }
-
-    plane.showInfo();
 }
 
 int main()

@@ -1,5 +1,4 @@
 #include "plane.hpp"
-// #include "../tests/test_plane.cpp"
 
 bool Plane::invariant() const
 {
@@ -55,8 +54,6 @@ void Plane::add(std::shared_ptr<UnitSegmentI> segment)
 {
     if (segment->invariant()) {
         segments.push_back(segment);
-    } else {
-        std::cout << "Can't add new segment" << '\n';
     }
 }
 
@@ -86,24 +83,20 @@ template<typename EnumType>
 std::shared_ptr<UnitSegmentI> Plane::getSegmentByType(EnumType type)
 {
     for (const auto& segment : segments) {
-        auto segmentType = segment->getType(); // Это std::variant<PassengerSegmentType, CrewMemberType>
-
-        // Используем std::visit для обработки обоих std::variant
+        auto segmentType = segment->getType();
         bool match = std::visit([&](auto&& arg) -> bool {
-            using T = std::decay_t<decltype(arg)>; // Определяем тип, который содержится в segmentType (std::variant)
+            using T = std::decay_t<decltype(arg)>;
 
-            // Проверяем, совпадает ли тип из segmentType с типом из type
             return std::visit([&](auto&& typeArg) -> bool {
-                using U = std::decay_t<decltype(typeArg)>; // Определяем тип, который содержится в type (std::variant)
-                // Проверяем совпадение типов и значений
+                using U = std::decay_t<decltype(typeArg)>;
                 if constexpr (std::is_same_v<T, U>) {
-                    return arg == typeArg; // Сравниваем значения
+                    return arg == typeArg;
                 }
                 return false;
             },
-                type); // Это распаковка type (второй variant)
+                type);
         },
-            segmentType); // Это распаковка segmentType (первый variant)
+            segmentType);
 
         if (match) {
             return segment;

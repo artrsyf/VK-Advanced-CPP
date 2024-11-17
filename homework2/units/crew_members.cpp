@@ -73,8 +73,6 @@ ReturnCodeType CrewSegment::add(std::shared_ptr<HumanUnitI> person)
 
         currentBaggageWeight += person->getBaggageWeight();
         currentLuggageWeight += person->getLuggageWeight();
-    } else {
-        std::cout << "Can't add new passanger" << '\n';
     }
 
     return ReturnCodeType::ALLOCATED;
