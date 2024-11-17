@@ -1,43 +1,46 @@
+#include <cassert>
 #include <iostream>
 #include <memory>
-#include <cassert>
 
 #include "../units/plane.hpp"
 
-class PlaneTestSuite
-{
+class PlaneTestSuite {
 public:
-    static void testInvariant() {
+    static void testInvariant()
+    {
         Plane plane = Plane();
         auto segment = std::make_shared<PassengerSegment>(PassengerSegment(1000, PassengerSegmentType::ECONOMY, 200));
-        
+
         plane.add(segment);
         assert(plane.invariant() == true);
     }
 
-    static void testGetLuggageWeight() {
+    static void testGetLuggageWeight()
+    {
         Plane plane = Plane();
         auto segment = std::make_shared<PassengerSegment>(PassengerSegment(1000, PassengerSegmentType::ECONOMY, 200));
         Passenger passenger("some_id", PassengerSegmentType::ECONOMY);
-        
+
         passenger.addLuggageItem(4);
         segment->add(std::make_shared<Passenger>(passenger));
         plane.add(segment);
         assert(plane.getLuggageWeight() == 4); // Проверка суммы веса багажа
     }
 
-    static void testGetBaggageWeight() {
+    static void testGetBaggageWeight()
+    {
         Plane plane = Plane();
         auto segment = std::make_shared<PassengerSegment>(PassengerSegment(1000, PassengerSegmentType::ECONOMY, 200));
         Passenger passenger("some_id", PassengerSegmentType::ECONOMY);
-        
+
         passenger.addBaggageItem(7);
         segment->add(std::make_shared<Passenger>(passenger));
         plane.add(segment);
         assert(plane.getBaggageWeight() == 7); // Проверка суммы веса багажа
     }
 
-    static void testAddPassenger() {
+    static void testAddPassenger()
+    {
         Plane plane = Plane();
         auto segment = std::make_shared<PassengerSegment>(PassengerSegment(1000, PassengerSegmentType::ECONOMY, 200));
         Passenger passenger("some_id", PassengerSegmentType::ECONOMY);
@@ -49,11 +52,12 @@ public:
         assert(plane.getBaggageWeight() == 7 && plane.getLuggageWeight() == 4);
     }
 
-    static void testTransferPassenger() {
+    static void testTransferPassenger()
+    {
         Plane plane = Plane();
         auto economySegment = std::make_shared<PassengerSegment>(PassengerSegment(50, PassengerSegmentType::ECONOMY, 200));
         auto businessSegment = std::make_shared<PassengerSegment>(PassengerSegment(10, PassengerSegmentType::BUSINESS, 10));
-    
+
         Passenger passenger1("some_id1", PassengerSegmentType::ECONOMY);
         passenger1.addLuggageItem(7);
         passenger1.addBaggageItem(8);
@@ -69,7 +73,8 @@ public:
         assert(plane.getLuggageWeight() == 17 && plane.getBaggageWeight() == 31);
     }
 
-    static void testShowInfo() {
+    static void testShowInfo()
+    {
         Plane plane = Plane();
         auto segment = std::make_shared<PassengerSegment>(PassengerSegment(1000, PassengerSegmentType::ECONOMY, 200));
         Passenger passenger("some_id", PassengerSegmentType::ECONOMY);
@@ -99,6 +104,15 @@ public:
         businessSegment->add(std::make_shared<Passenger>(businessPassenger));
         plane.add(businessSegment);
 
+        auto firstClassSegment = std::make_shared<PassengerSegment>(PassengerSegment(1000, PassengerSegmentType::FIRST_CLASS, 10));
+        Passenger firstClassPassenger("some_id2", PassengerSegmentType::FIRST_CLASS);
+        firstClassPassenger.addBaggageItem(13);
+        firstClassSegment->add(std::make_shared<Passenger>(firstClassPassenger));
+        plane.add(firstClassSegment);
+
+        plane.add(std::make_shared<CrewSegment>(CrewSegment(0, CrewMemberType::PILOT)));
+        plane.add(std::make_shared<CrewSegment>(CrewSegment(0, CrewMemberType::FLIGHT_ATTENDANT)));
+
         EnumVariant economyVariant = PassengerSegmentType::ECONOMY;
         auto checkEconomySegment = plane.getSegmentByType(economyVariant);
         assert(checkEconomySegment->getBaggageWeight() == 5);
@@ -106,6 +120,18 @@ public:
         EnumVariant businessVariant = PassengerSegmentType::BUSINESS;
         auto checkBusinessSegment = plane.getSegmentByType(businessVariant);
         assert(checkBusinessSegment->getBaggageWeight() == 13);
+
+        EnumVariant crewVariant = CrewMemberType::PILOT;
+        auto checkCrewSegment = plane.getSegmentByType(crewVariant);
+        assert(checkCrewSegment->getBaggageWeight() == 0);
+
+        EnumVariant crewVariant2 = CrewMemberType::FLIGHT_ATTENDANT;
+        auto checkCrewSegment2 = plane.getSegmentByType(crewVariant2);
+        assert(checkCrewSegment->getBaggageWeight() == 0);
+
+        EnumVariant firstClassVariant = PassengerSegmentType::FIRST_CLASS;
+        auto checkFirstClassSegment = plane.getSegmentByType(firstClassVariant);
+        assert(checkFirstClassSegment->getBaggageWeight() == 13);
     }
 
     static void runTests()
@@ -122,7 +148,9 @@ public:
     }
 };
 
-void main()
+int main()
 {
     PlaneTestSuite::runTests();
+
+    return 0;
 }

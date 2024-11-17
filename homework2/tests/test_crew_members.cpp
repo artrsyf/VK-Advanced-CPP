@@ -1,19 +1,20 @@
+#include <cassert>
 #include <iostream>
 #include <memory>
-#include <cassert>
 
 #include "../units/crew_members.hpp"
 
-class CrewMemberTestSuite
-{
+class CrewMemberTestSuite {
 public:
     // Вспомогательная функция для создания объекта `CrewMember`
-    static std::shared_ptr<CrewMember> createCrewMember(const std::string& id, CrewMemberType type) {
+    static std::shared_ptr<CrewMember> createCrewMember(const std::string& id, CrewMemberType type)
+    {
         return std::make_shared<CrewMember>(id, type);
     }
 
     // Тесты для класса CrewMember
-    static void testCrewMember() {
+    static void testCrewMember()
+    {
         auto crewMember = createCrewMember("ID_1", CrewMemberType::PILOT);
 
         // Test invariant (ожидаем, что багаж и ручная кладь пусты для экипажа)
@@ -36,7 +37,8 @@ public:
     }
 
     // Тесты для класса CrewSegment
-    static void testCrewSegment() {
+    static void testCrewSegment()
+    {
         int allowedWeight = 100; // Допустимый вес для сегмента экипажа
         CrewSegment crewSegment(allowedWeight, CrewMemberType::PILOT);
 
@@ -67,6 +69,9 @@ public:
         // Проверка invariant (должен оставаться true, так как вес багажа <= допустимого)
         assert(crewSegment.invariant() == true);
 
+        auto crewMemberRegister = createCrewMember("ID_5", CrewMemberType::FLIGHT_ATTENDANT);
+        crewSegment.registerBaggage(crewMemberRegister);
+
         // Проверка showInfo (вывод информации о сегменте экипажа)
         crewSegment.showInfo();
     }
@@ -80,7 +85,9 @@ public:
     }
 };
 
-void main()
+int main()
 {
     CrewMemberTestSuite::runTests();
+
+    return 0;
 }

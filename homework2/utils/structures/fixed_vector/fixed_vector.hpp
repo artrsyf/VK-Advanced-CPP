@@ -1,22 +1,28 @@
 #pragma once
 
-#include <vector>
+#include <algorithm>
 #include <functional>
 #include <stdexcept>
-#include <algorithm>
+#include <vector>
 
-template <typename T>
+template<typename T>
 class FixedVector {
 public:
     // Конструктор по умолчанию
     FixedVector() = default;
 
     // Конструктор с указанием размера
-    explicit FixedVector(size_t size) : data(size), maxSize(size) {}
+    explicit FixedVector(size_t size)
+        : data(size)
+        , maxSize(size)
+    {
+    }
 
     // Метод для инициализации после создания объекта
-    void initialize(size_t size) {
-        if (!data.empty()) throw std::runtime_error("Already initialized");
+    void initialize(size_t size)
+    {
+        if (!data.empty())
+            throw std::runtime_error("Already initialized");
         if (size < data.size()) {
             throw std::invalid_argument("New size must be greater than or equal to the current size");
         }
@@ -24,7 +30,8 @@ public:
     }
 
     // Метод для удаления элемента, соответствующего максимальному критерию
-    T removeMaxByCriteria(std::function<bool(const T&, const T&)> criterion) {
+    T removeMaxByCriteria(std::function<bool(const T&, const T&)> criterion)
+    {
         if (data.empty()) {
             throw std::runtime_error("Can't remove element, struct is empty.");
         }
@@ -43,7 +50,8 @@ public:
     }
 
     // Метод для добавления элемента с проверкой на переполнение
-    void add(const T& item) {
+    void add(const T& item)
+    {
         if (data.size() >= maxSize) {
             throw std::overflow_error("FixedVector overflow: Maximum size reached");
         }
@@ -51,26 +59,31 @@ public:
     }
 
     // Доступ к элементам
-    T& operator[](size_t index) {
+    T& operator[](size_t index)
+    {
         return data.at(index);
     }
 
-    const T& operator[](size_t index) const {
+    const T& operator[](size_t index) const
+    {
         return data.at(index);
     }
 
     // Текущий размер
-    size_t size() const {
+    size_t size() const
+    {
         return data.size();
     }
 
     // Проверка на пустоту
-    bool empty() const {
+    bool empty() const
+    {
         return data.empty();
     }
 
     // Максимальный размер
-    size_t capacity() const {
+    size_t capacity() const
+    {
         return maxSize;
     }
 

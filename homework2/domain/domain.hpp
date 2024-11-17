@@ -1,40 +1,58 @@
 #pragma once
 
-struct BaggagePos
-{
+struct BaggagePos {
     int weight;
 
-    BaggagePos() : weight(0) {}
-    BaggagePos(int w) : weight(w) {}
+    BaggagePos()
+        : weight(0)
+    {
+    }
+    BaggagePos(int w)
+        : weight(w)
+    {
+    }
 };
 
-struct LuggagePos
-{
+struct LuggagePos {
     int weight;
 
-    LuggagePos() : weight(0) {}
-    LuggagePos(int w) : weight(w) {}
+    LuggagePos()
+        : weight(0)
+    {
+    }
+    LuggagePos(int w)
+        : weight(w)
+    {
+    }
 };
 
-struct HandLuggagePermission
-{
+struct HandLuggagePermission {
     int allowedQuantity;
     int allowedWeight;
 
-    HandLuggagePermission(int _allowedQuantity, int _allowedWeight) : allowedQuantity(_allowedQuantity), allowedWeight(_allowedWeight) {}
+    HandLuggagePermission(int _allowedQuantity, int _allowedWeight)
+        : allowedQuantity(_allowedQuantity)
+        , allowedWeight(_allowedWeight)
+    {
+    }
 };
 
-struct BaggagePermission
-{
+struct BaggagePermission {
     int allowedQuantity;
     int allowedWeight;
 
-    BaggagePermission(int _allowedQuantity, int _allowedWeight) : allowedQuantity(_allowedQuantity), allowedWeight(_allowedWeight) {}
+    BaggagePermission(int _allowedQuantity, int _allowedWeight)
+        : allowedQuantity(_allowedQuantity)
+        , allowedWeight(_allowedWeight)
+    {
+    }
 };
 
-struct BaggageSegmentSpacePermission
-{
+struct BaggageSegmentSpacePermission {
     int allowedWeight;
 
-    BaggageSegmentSpacePermission(int _allowedWeight) : allowedWeight(_allowedWeight) {}
+    BaggageSegmentSpacePermission(int _allowedWeight)
+        : allowedWeight(_allowedWeight)
+    {
+    }
 };
