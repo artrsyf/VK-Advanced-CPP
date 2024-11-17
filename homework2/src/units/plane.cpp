@@ -1,5 +1,5 @@
 #include "plane.hpp"
-#include "../../../../test/application/units/plane/plane_test.hpp"
+#include "../tests/test_plane.cpp"
 
 bool Plane::invariant() const
 {

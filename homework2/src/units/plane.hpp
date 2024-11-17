@@ -2,8 +2,8 @@
 
 #include <variant>
 
-#include "../passenger/passengers.hpp"
-#include "../crew_member/crew_members.hpp"
+#include "./passengers.hpp"
+#include "./crew_members.hpp"
 
 using EnumVariant = std::variant<PassengerSegmentType, CrewMemberType>;
 

@@ -2,7 +2,7 @@
 #include <memory>
 #include <cassert>
 
-#include "../../../../main/application/units/passenger/passengers.hpp"
+#include "../units/passengers.hpp"
 
 class PassengerTestSuite
 {
@@ -279,3 +279,8 @@ public:
         std::cout << "\nSUCCESS: Passenger tests passed successfully.\n\n";
     }
 };
+
+void main()
+{
+    PassengerTestSuite::runTests();
+}

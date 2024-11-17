@@ -2,7 +2,7 @@
 #include <memory>
 #include <cassert>
 
-#include "../../../../main/application/units/plane/plane.hpp"
+#include "../units/plane.hpp"
 
 class PlaneTestSuite
 {
@@ -121,3 +121,8 @@ public:
         std::cout << "\nSUCCESS: Plane tests passed successfully.\n\n";
     }
 };
+
+void main()
+{
+    PlaneTestSuite::runTests();
+}

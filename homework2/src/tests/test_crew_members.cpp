@@ -2,7 +2,7 @@
 #include <memory>
 #include <cassert>
 
-#include "../../../../main/application/units/crew_member/crew_members.hpp"
+#include "../units/crew_members.hpp"
 
 class CrewMemberTestSuite
 {
@@ -79,3 +79,8 @@ public:
         std::cout << "\nSUCCESS: Crew Member tests passed successfully.\n\n";
     }
 };
+
+void main()
+{
+    CrewMemberTestSuite::runTests();
+}

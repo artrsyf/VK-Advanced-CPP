@@ -10,7 +10,7 @@
 #include <iterator>
 #include <variant>
 
-#include "../interfaces/unit.hpp"
+#include "./unit.hpp"
 
 const int INFINITY = std::numeric_limits<int>::max();
 
