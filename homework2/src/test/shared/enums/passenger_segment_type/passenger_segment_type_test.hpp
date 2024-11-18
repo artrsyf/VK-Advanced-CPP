@@ -20,7 +20,6 @@ public:
     }
 
     static void testMapSegmentToString_Unknown() {
-        // Проверка, что возвращается "Unknown", если передать неизвестное значение.
         assert(mapSegmentToString(static_cast<PassengerSegmentType>(999)) == "Unknown");
     }
 
@@ -56,7 +55,6 @@ public:
         assert(mapPassengerStringToSegmentType("UNKNOWN_PASSENGER") == PassengerSegmentType::ECONOMY);
     }
 
-    // Функция для запуска всех тестов
     static void runTests() {
         testMapSegmentToString_Economy();
         testMapSegmentToString_Business();

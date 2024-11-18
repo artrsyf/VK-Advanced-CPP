@@ -23,7 +23,7 @@ public:
         passenger.addLuggageItem(4);
         segment->add(std::make_shared<Passenger>(passenger));
         plane.add(segment);
-        assert(plane.getLuggageWeight() == 4); // Проверка суммы веса багажа
+        assert(plane.getLuggageWeight() == 4);
     }
 
     static void testGetBaggageWeight() {
@@ -34,7 +34,7 @@ public:
         passenger.addBaggageItem(7);
         segment->add(std::make_shared<Passenger>(passenger));
         plane.add(segment);
-        assert(plane.getBaggageWeight() == 7); // Проверка суммы веса багажа
+        assert(plane.getBaggageWeight() == 7);
     }
 
     static void testAddPassenger() {

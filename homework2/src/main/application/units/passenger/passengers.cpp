@@ -235,13 +235,12 @@ void PassengerSegment::registerBaggage(std::shared_ptr<HumanUnitI> person)
     {
         auto maxBaggagePersonIter = std::max_element(persons.begin(), persons.end(), 
         [](const std::shared_ptr<HumanUnitI>& personA, const std::shared_ptr<HumanUnitI>& personB) {
-            // Находим максимальный вес среди багажа для каждого пассажира
             int maxWeightA = 0;
             auto personABaggagePositions = personA->getBaggagePositions();
             if (!personABaggagePositions.empty()) {
                 maxWeightA = std::max_element(personABaggagePositions.begin(), personABaggagePositions.end(),
                     [](const BaggagePos& a, const BaggagePos& b) {
-                        return a.weight < b.weight; // Сравниваем по весу
+                        return a.weight < b.weight;
                     })->weight;
             }
 
@@ -250,11 +249,11 @@ void PassengerSegment::registerBaggage(std::shared_ptr<HumanUnitI> person)
             if (!personBBaggagePositions.empty()) {
                 maxWeightB = std::max_element(personBBaggagePositions.begin(), personBBaggagePositions.end(),
                     [](const BaggagePos& a, const BaggagePos& b) {
-                        return a.weight < b.weight; // Сравниваем по весу
+                        return a.weight < b.weight;
                     })->weight;
             }
             
-            return maxWeightA < maxWeightB; // Сравниваем максимальные веса
+            return maxWeightA < maxWeightB;
         });
 
         auto personWithMaxBaggage = *maxBaggagePersonIter;

@@ -27,10 +27,9 @@ public:
     }
 
     static void testMapStringToCrew_Invalid() {
-        assert(mapStringToCrew("UNKNOWN_TYPE") == CrewMemberType::FLIGHT_ATTENDANT);  // Должен вернуть FLIGHT_ATTENDANT по умолчанию
+        assert(mapStringToCrew("UNKNOWN_TYPE") == CrewMemberType::FLIGHT_ATTENDANT);
     }
 
-    // Функция для запуска всех тестов
     static void runTests() {
         testMapCrewToString_Pilot();
         testMapCrewToString_FlightAttendant();

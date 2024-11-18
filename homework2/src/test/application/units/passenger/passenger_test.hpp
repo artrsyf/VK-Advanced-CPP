@@ -7,37 +7,30 @@
 class PassengerTestSuite
 {
 public:
-    // Функция для тестирования Passenger::invariant
     static void testPassengerInvariant() {
         Passenger passenger("unique_id", PassengerSegmentType::ECONOMY);
         
-        // Тестируем с багажом, который не превышает лимитов
         passenger.addBaggageItem(10);
         passenger.addLuggageItem(5);
         assert(passenger.invariant() == true);
     }
 
-    // Функция для тестирования превышения багажа
     static void testPassengerBaggageBound() {
         Passenger passenger("unique_id", PassengerSegmentType::ECONOMY);
         
-        // Тестируем с багажом, который не превышает лимитов
         passenger.addBaggageItem(10);
         passenger.addBaggageItem(5);
         assert(passenger.getBaggageWeight() == 10 && passenger.getBaggagePositions().size() == 1);
     }
 
-    // Функция для тестирования превышения клади
     static void testPassengerLuggageBound() {
         Passenger passenger("unique_id", PassengerSegmentType::ECONOMY);
         
-        // Тестируем с багажом, который не превышает лимитов
         passenger.addLuggageItem(4);
         passenger.addLuggageItem(5);
         assert(passenger.getLuggageWeight() == 4);
     }
 
-    // getId test
     static void testPassengerIdGetter()
     {
         Passenger passenger("unique_id", PassengerSegmentType::ECONOMY);
@@ -46,7 +39,6 @@ public:
         assert(personIdentifiable->getId() == "unique_id");
     }
 
-    // showInfo test
     static void testPassengerShowInfo()
     {
         Passenger passenger("some_id", PassengerSegmentType::ECONOMY);
@@ -63,7 +55,6 @@ public:
         assert(passenger.getLuggageWeight() == 4);
     }
 
-    // Функция для тестирования Passenger::getBaggageWeight и getLuggageWeight
     static void testPassengerWeightCalculations() {
         Passenger passenger("unique_id", PassengerSegmentType::BUSINESS);
 
@@ -75,30 +66,27 @@ public:
         assert(passenger.getLuggageWeight() == 5);
     }
 
-    // Функция для тестирования Passenger::addBaggageItem с проверкой на переполнение
     static void testPassengerAddBaggageItem() {
         Passenger passenger("unique_id", PassengerSegmentType::ECONOMY);
-        passenger.addBaggageItem(25); // Превышение веса багажа для ECONOMY
-        assert(passenger.getBaggageWeight() == 0); // Багаж не добавлен
+        passenger.addBaggageItem(25);
+        assert(passenger.getBaggageWeight() == 0);
 
-        passenger.addBaggageItem(10); // Успешно добавлен
+        passenger.addBaggageItem(10);
         assert(passenger.getBaggageWeight() == 10);
     }
 
-    // Функция для тестирования Passenger::addLuggageItem с проверкой на переполнение
     static void testPassengerAddLuggageItem() {
         Passenger passenger("unique_id", PassengerSegmentType::ECONOMY);
-        passenger.addLuggageItem(15); // Превышение веса ручной клади для ECONOMY
-        assert(passenger.getLuggageWeight() == 0); // Ручная кладь не добавлена
+        passenger.addLuggageItem(15);
+        assert(passenger.getLuggageWeight() == 0);
 
-        passenger.addLuggageItem(5); // Успешно добавлено
+        passenger.addLuggageItem(5);
         assert(passenger.getLuggageWeight() == 5);
     }
 
-    // Функция для тестирования PassengerSegment::invariant
     static void testPassengerSegmentInvariant() {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
-        PassengerSegment segment(200, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum)); // лимит в 200 кг
+        PassengerSegment segment(200, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum));
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
         std::shared_ptr<Passenger> passenger2 = std::make_shared<Passenger>("passenger2", PassengerSegmentType::ECONOMY);
 
@@ -108,13 +96,12 @@ public:
         segment.add(passenger1);
         segment.add(passenger2);
 
-        assert(segment.invariant() == true); // В пределах допустимого
+        assert(segment.invariant() == true);
     }
 
-    // Функция для тестирования PassengerSegment::add и реакции на переполнение
     static void testPassengerSegmentAdd() {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
-        PassengerSegment segment(50, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum)); // лимит в 50 кг
+        PassengerSegment segment(50, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum));
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
         std::shared_ptr<Passenger> passenger2 = std::make_shared<Passenger>("passenger2", PassengerSegmentType::ECONOMY);
 
@@ -122,12 +109,12 @@ public:
         passenger2->addBaggageItem(35);
 
         assert(segment.add(passenger1) == ReturnCodeType::ALLOCATED);
-        assert(segment.add(passenger2) == ReturnCodeType::ALLOCATED); // Пассажир не добавлен, требуется трансфер
+        assert(segment.add(passenger2) == ReturnCodeType::ALLOCATED);
     }
 
     static void testSegmentInabilityToAdd() {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
-        PassengerSegment segment(3, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum)); // лимит в 50 кг
+        PassengerSegment segment(3, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum));
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
 
         passenger1->addLuggageItem(4);
@@ -139,7 +126,7 @@ public:
 
     static void testSegmentBaggageDrop() {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
-        PassengerSegment segment(3, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum)); // лимит в 50 кг
+        PassengerSegment segment(3, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum));
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
 
         passenger1->addLuggageItem(2);
@@ -150,14 +137,12 @@ public:
         assert(segment.getBaggageWeight() == 0 && segment.getLuggageWeight() == 2);
     }
 
-    // getAllowedWeight
     static void testPassengerSegmentAllowedWeightGetter() {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
         PassengerSegment segment(50, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum));
         assert(segment.getAllowedWeight() == 50);
     }
 
-    // Функция для тестирования Passenger::dropBiggestBaggagePosition
     static void testDropBiggestBaggagePosition() {
         Passenger passenger("unique_id", PassengerSegmentType::FIRST_CLASS);
         passenger.addBaggageItem(12);
@@ -168,14 +153,13 @@ public:
         assert(passenger.getBaggageWeight() == 12); 
     }
 
-    // Функция для тестирования PassengerSegment::registerBaggage
     static void testRegisterBaggage() {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
         PassengerSegment segment(100, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum)); // лимит в 100 кг
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
 
         passenger1->addBaggageItem(24);
-        segment.registerBaggage(passenger1); // Регистрируем багаж пассажира
+        segment.registerBaggage(passenger1);
         assert(segment.getBaggageWeight() == 24);
     }
 
@@ -252,7 +236,6 @@ public:
         assert(true);
     }
 
-    // Основная функция, запускающая все тесты
     static void runTests() {
         testPassengerInvariant();
         testPassengerBaggageBound();
