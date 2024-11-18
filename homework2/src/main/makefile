@@ -60,6 +60,12 @@ coverage: $(TEST_TARGET)
 	lcov --remove coverage.info "/usr/include/*" --output-file coverage_filtered.info
 	genhtml coverage_filtered.info --output-directory coverage_report
 
+lint:
+	find ../ -iname "*.cpp" -o -iname "*.hpp" | xargs clang-format -i -style=file --dry-run --Werror
+
+format:
+	find ../ -iname "*.cpp" -o -iname "*.hpp" | xargs clang-format -i -style=file --Werror	
+
 # Очистка сгенерированных файлов
 clean:
 	rm -f $(OBJS) $(MAIN_OBJS) $(TEST_OBJS) $(TARGET) $(TARGET).exe $(TEST_TARGET) $(TEST_TARGET).exe $(COVERAGE_GCNO) $(COVERAGE_GCDA) coverage.info coverage_filtered.info main.gcda main.gcno
