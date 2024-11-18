@@ -1,6 +1,6 @@
+#include <cassert>
 #include <iostream>
 #include <memory>
-#include <cassert>
 
 #include "../../../../main/application/units/crew_member/crew_members.hpp"
 

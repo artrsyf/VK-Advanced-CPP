@@ -3,9 +3,9 @@
 
 bool Plane::invariant() const
 {
-    for (const auto & segment : segments)
-    {
-        if (!segment->invariant()) return false;
+    for (const auto& segment : segments) {
+        if (!segment->invariant())
+            return false;
     }
 
     return true;
@@ -15,8 +15,7 @@ int Plane::getLuggageWeight() const
 {
     int acc = 0;
 
-    for (const auto & segment : segments)
-    {
+    for (const auto& segment : segments) {
         acc += segment->getLuggageWeight();
     }
 
@@ -27,8 +26,7 @@ int Plane::getBaggageWeight() const
 {
     int acc = 0;
 
-    for (const auto & segment : segments)
-    {
+    for (const auto& segment : segments) {
         acc += segment->getBaggageWeight();
     }
 
@@ -48,30 +46,29 @@ void Plane::addPassenger(std::shared_ptr<HumanUnitI> person)
     auto personSegment = getSegmentByType(person->getType());
 
     ReturnCodeType codeType = personSegment->add(person);
-    if (codeType == ReturnCodeType::NEED_TRANSFER)
-    {
+    if (codeType == ReturnCodeType::NEED_TRANSFER) {
         transferPersonBaggage(person);
     }
 }
 
-void Plane::add(std::shared_ptr<UnitSegmentI> segment) {
-    if (segment->invariant())
-    {
+void Plane::add(std::shared_ptr<UnitSegmentI> segment)
+{
+    if (segment->invariant()) {
         segments.push_back(segment);
-    } 
-    else
-    {
+    } else {
         std::cout << "Can't add new segment" << '\n';
     }
 }
 
-void Plane::showInfo() const {
-    std::cout << "INFO: Plane load:" << "\n\n";
+void Plane::showInfo() const
+{
+    std::cout << "INFO: Plane load:"
+              << "\n\n";
 
     int totalBaggageWeight = 0;
     int totalLuggageWeight = 0;
     int allowedWeight = 0;
-    for (const auto & segment : segments) {
+    for (const auto& segment : segments) {
         segment->showInfo();
 
         totalBaggageWeight += segment->getBaggageWeight();
@@ -85,11 +82,10 @@ void Plane::showInfo() const {
     std::cout << "Total load: " << totalBaggageWeight + totalLuggageWeight << "/" << allowedWeight << "kg.\n";
 }
 
-template <typename EnumType>
+template<typename EnumType>
 std::shared_ptr<UnitSegmentI> Plane::getSegmentByType(EnumType type)
 {
-    for (const auto& segment : segments)
-    {
+    for (const auto& segment : segments) {
         auto segmentType = segment->getType();
 
         bool match = std::visit([&](auto&& arg) -> bool {
@@ -101,9 +97,10 @@ std::shared_ptr<UnitSegmentI> Plane::getSegmentByType(EnumType type)
                     return arg == typeArg;
                 }
                 return false;
-            }, type);
-
-        }, segmentType);
+            },
+                type);
+        },
+            segmentType);
 
         if (match) {
             return segment;

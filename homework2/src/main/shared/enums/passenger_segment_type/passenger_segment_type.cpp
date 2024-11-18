@@ -2,16 +2,20 @@
 
 std::string mapSegmentToString(PassengerSegmentType segmentType)
 {
-    switch (segmentType) 
-    {
-        case PassengerSegmentType::ECONOMY: return "Economy";
-        case PassengerSegmentType::BUSINESS: return "Business";
-        case PassengerSegmentType::FIRST_CLASS: return "First Class";
-        default: return "Unknown";
+    switch (segmentType) {
+    case PassengerSegmentType::ECONOMY:
+        return "Economy";
+    case PassengerSegmentType::BUSINESS:
+        return "Business";
+    case PassengerSegmentType::FIRST_CLASS:
+        return "First Class";
+    default:
+        return "Unknown";
     }
 }
 
-PassengerSegmentType mapStringToSegmentType(std::string segmentTypeString) {
+PassengerSegmentType mapStringToSegmentType(std::string segmentTypeString)
+{
     if (segmentTypeString == FIRST_CLASS_SEGMENT) {
         return PassengerSegmentType::FIRST_CLASS;
     } else if (segmentTypeString == BUSINESS_CLASS_SEGMENT) {
@@ -24,7 +28,8 @@ PassengerSegmentType mapStringToSegmentType(std::string segmentTypeString) {
     }
 }
 
-PassengerSegmentType mapPassengerStringToSegmentType(std::string segmentTypeString) {
+PassengerSegmentType mapPassengerStringToSegmentType(std::string segmentTypeString)
+{
     if (segmentTypeString == FIRST_CLASS) {
         return PassengerSegmentType::FIRST_CLASS;
     } else if (segmentTypeString == BUSINESS) {

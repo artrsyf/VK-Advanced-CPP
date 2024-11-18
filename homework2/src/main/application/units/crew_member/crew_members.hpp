@@ -1,19 +1,22 @@
 #pragma once
 
+#include <algorithm>
 #include <iostream>
 #include <memory>
-#include <vector>
-#include <algorithm>
 #include <variant>
+#include <vector>
 
 #include "../interfaces/unit.hpp"
 
 const int CREW_MEMBER_COUNT = 8;
 
-class CrewMember : public HumanUnitI
-{
+class CrewMember : public HumanUnitI {
 public:
-    CrewMember(std::string _id, CrewMemberType _type) : id(_id), type(_type) {}
+    CrewMember(std::string _id, CrewMemberType _type)
+        : id(_id)
+        , type(_type)
+    {
+    }
 
     bool invariant() const override;
 
@@ -32,14 +35,15 @@ private:
     CrewMemberType type;
 };
 
-class CrewSegment : public UnitSegmentI 
-{
+class CrewSegment : public UnitSegmentI {
 public:
-    CrewSegment(int _allowedWeight, CrewMemberType _type) :
-        type(_type),
-        allowedWeight(_allowedWeight),
-        currentBaggageWeight(0),
-        currentLuggageWeight(0) {}
+    CrewSegment(int _allowedWeight, CrewMemberType _type)
+        : type(_type)
+        , allowedWeight(_allowedWeight)
+        , currentBaggageWeight(0)
+        , currentLuggageWeight(0)
+    {
+    }
 
     bool invariant() const override;
 

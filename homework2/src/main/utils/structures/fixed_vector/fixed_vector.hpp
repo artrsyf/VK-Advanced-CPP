@@ -1,26 +1,33 @@
 #pragma once
 
-#include <vector>
+#include <algorithm>
 #include <functional>
 #include <stdexcept>
-#include <algorithm>
+#include <vector>
 
-template <typename T>
+template<typename T>
 class FixedVector {
 public:
     FixedVector() = default;
 
-    explicit FixedVector(size_t size) : data(size), maxSize(size) {}
+    explicit FixedVector(size_t size)
+        : data(size)
+        , maxSize(size)
+    {
+    }
 
-    void initialize(size_t size) {
-        if (!data.empty()) throw std::runtime_error("Already initialized");
+    void initialize(size_t size)
+    {
+        if (!data.empty())
+            throw std::runtime_error("Already initialized");
         if (size < data.size()) {
             throw std::invalid_argument("New size must be greater than or equal to the current size");
         }
         maxSize = size;
     }
 
-    T removeMaxByCriteria(std::function<bool(const T&, const T&)> criterion) {
+    T removeMaxByCriteria(std::function<bool(const T&, const T&)> criterion)
+    {
         if (data.empty()) {
             throw std::runtime_error("Can't remove element, struct is empty.");
         }
@@ -36,30 +43,36 @@ public:
         return maxElement;
     }
 
-    void add(const T& item) {
+    void add(const T& item)
+    {
         if (data.size() >= maxSize) {
             throw std::overflow_error("FixedVector overflow: Maximum size reached");
         }
         data.push_back(item);
     }
 
-    T& operator[](size_t index) {
+    T& operator[](size_t index)
+    {
         return data.at(index);
     }
 
-    const T& operator[](size_t index) const {
+    const T& operator[](size_t index) const
+    {
         return data.at(index);
     }
 
-    size_t size() const {
+    size_t size() const
+    {
         return data.size();
     }
 
-    bool empty() const {
+    bool empty() const
+    {
         return data.empty();
     }
 
-    size_t capacity() const {
+    size_t capacity() const
+    {
         return maxSize;
     }
 

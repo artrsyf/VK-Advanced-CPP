@@ -1,13 +1,12 @@
 #pragma once
 
-#include <string>
 #include <iostream>
+#include <string>
 
 const std::string PILOT = "PILOT";
 const std::string FLIGHT_ATTENDANT = "FLIGHT_ATTENDANT";
 
-enum class CrewMemberType
-{
+enum class CrewMemberType {
     PILOT,
     FLIGHT_ATTENDANT,
 };

@@ -1,14 +1,14 @@
 #pragma once
 
-#include <string>
-#include <iostream>
-#include <memory>
-#include <vector>
 #include <algorithm>
-#include <limits>
-#include <numeric>
+#include <iostream>
 #include <iterator>
+#include <limits>
+#include <memory>
+#include <numeric>
+#include <string>
 #include <variant>
+#include <vector>
 
 #include "../interfaces/unit.hpp"
 
@@ -16,15 +16,13 @@ const int INFINITY = std::numeric_limits<int>::max();
 
 const int SEGEMNT_COUNT = 3;
 
-class Passenger : public HumanUnitI, public FlexibleBaggageI, public IdentifiableI
-{
+class Passenger : public HumanUnitI, public FlexibleBaggageI, public IdentifiableI {
 public:
     Passenger(
-        const std::string & _id,
-        PassengerSegmentType _passengerSegment
-    ) : 
-        id(_id), 
-        passengerSegment(_passengerSegment)
+        const std::string& _id,
+        PassengerSegmentType _passengerSegment)
+        : id(_id)
+        , passengerSegment(_passengerSegment)
     {
         luggage.initialize(getHandLuggagePermission(passengerSegment).allowedQuantity);
         baggage.initialize(getBaggagePermission(passengerSegment).allowedQuantity);
@@ -47,7 +45,7 @@ public:
     FixedVector<BaggagePos> getBaggagePositions() const override;
 
     int dropBiggestBaggagePosition() override;
-    
+
     void showInfo() const override;
 
 private:
@@ -62,15 +60,16 @@ private:
     static BaggagePermission getBaggagePermission(PassengerSegmentType bookedPassengerSegment);
 };
 
-class PassengerSegment : public UnitSegmentI 
-{
+class PassengerSegment : public UnitSegmentI {
 public:
-    PassengerSegment(int _allowedWeight, PassengerSegmentType _type, int _passengersCapacity) :
-        type(_type),
-        allowedWeight(_allowedWeight),
-        passengersCapacity(_passengersCapacity),
-        currentBaggageWeight(0),
-        currentLuggageWeight(0) {}
+    PassengerSegment(int _allowedWeight, PassengerSegmentType _type, int _passengersCapacity)
+        : type(_type)
+        , allowedWeight(_allowedWeight)
+        , passengersCapacity(_passengersCapacity)
+        , currentBaggageWeight(0)
+        , currentLuggageWeight(0)
+    {
+    }
 
     bool invariant() const override;
 

@@ -2,22 +2,21 @@
 
 #include <variant>
 
-#include "../passenger/passengers.hpp"
 #include "../crew_member/crew_members.hpp"
+#include "../passenger/passengers.hpp"
 
 using EnumVariant = std::variant<PassengerSegmentType, CrewMemberType>;
 
 class PlaneTestSuite;
 
-class Plane : public UnitI
-{
+class Plane : public UnitI {
 public:
     bool invariant() const override;
 
     int getLuggageWeight() const override;
 
     int getBaggageWeight() const override;
-    
+
     void transferPersonBaggage(std::shared_ptr<HumanUnitI> person);
 
     void addPassenger(std::shared_ptr<HumanUnitI> person);
@@ -28,8 +27,8 @@ public:
 
 private:
     std::vector<std::shared_ptr<UnitSegmentI>> segments;
-    
-    template <typename EnumType>
+
+    template<typename EnumType>
     std::shared_ptr<UnitSegmentI> getSegmentByType(EnumType type);
 
     friend class PlaneTestSuite;

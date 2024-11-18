@@ -1,36 +1,43 @@
+#include <cassert>
 #include <iostream>
 #include <memory>
-#include <cassert>
 
 #include "../../../../main/shared/enums/crew_member_type/crew_member_type.hpp"
 
-class CrewMemberTypeTestSuite{
+class CrewMemberTypeTestSuite {
 public:
-    static void testMapCrewToString_Pilot() {
+    static void testMapCrewToString_Pilot()
+    {
         assert(mapCrewToString(CrewMemberType::PILOT) == "Pilot");
     }
 
-    static void testMapCrewToString_FlightAttendant() {
+    static void testMapCrewToString_FlightAttendant()
+    {
         assert(mapCrewToString(CrewMemberType::FLIGHT_ATTENDANT) == "Flight attendant");
     }
 
-    static void testMapCrewToString_Unknown() {
+    static void testMapCrewToString_Unknown()
+    {
         assert(mapCrewToString(static_cast<CrewMemberType>(999)) == "Unknown");
     }
 
-    static void testMapStringToCrew_Pilot() {
+    static void testMapStringToCrew_Pilot()
+    {
         assert(mapStringToCrew(PILOT) == CrewMemberType::PILOT);
     }
 
-    static void testMapStringToCrew_FlightAttendant() {
+    static void testMapStringToCrew_FlightAttendant()
+    {
         assert(mapStringToCrew(FLIGHT_ATTENDANT) == CrewMemberType::FLIGHT_ATTENDANT);
     }
 
-    static void testMapStringToCrew_Invalid() {
+    static void testMapStringToCrew_Invalid()
+    {
         assert(mapStringToCrew("UNKNOWN_TYPE") == CrewMemberType::FLIGHT_ATTENDANT);
     }
 
-    static void runTests() {
+    static void runTests()
+    {
         testMapCrewToString_Pilot();
         testMapCrewToString_FlightAttendant();
         testMapCrewToString_Unknown();
