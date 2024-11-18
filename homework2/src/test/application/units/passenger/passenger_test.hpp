@@ -4,28 +4,30 @@
 
 #include "../../../../main/application/units/passenger/passengers.hpp"
 
-class PassengerTestSuite
-{
+class PassengerTestSuite {
 public:
-    static void testPassengerInvariant() {
+    static void testPassengerInvariant()
+    {
         Passenger passenger("unique_id", PassengerSegmentType::ECONOMY);
-        
+
         passenger.addBaggageItem(10);
         passenger.addLuggageItem(5);
         assert(passenger.invariant() == true);
     }
 
-    static void testPassengerBaggageBound() {
+    static void testPassengerBaggageBound()
+    {
         Passenger passenger("unique_id", PassengerSegmentType::ECONOMY);
-        
+
         passenger.addBaggageItem(10);
         passenger.addBaggageItem(5);
         assert(passenger.getBaggageWeight() == 10 && passenger.getBaggagePositions().size() == 1);
     }
 
-    static void testPassengerLuggageBound() {
+    static void testPassengerLuggageBound()
+    {
         Passenger passenger("unique_id", PassengerSegmentType::ECONOMY);
-        
+
         passenger.addLuggageItem(4);
         passenger.addLuggageItem(5);
         assert(passenger.getLuggageWeight() == 4);
@@ -55,7 +57,8 @@ public:
         assert(passenger.getLuggageWeight() == 4);
     }
 
-    static void testPassengerWeightCalculations() {
+    static void testPassengerWeightCalculations()
+    {
         Passenger passenger("unique_id", PassengerSegmentType::BUSINESS);
 
         passenger.addBaggageItem(10);
@@ -66,7 +69,8 @@ public:
         assert(passenger.getLuggageWeight() == 5);
     }
 
-    static void testPassengerAddBaggageItem() {
+    static void testPassengerAddBaggageItem()
+    {
         Passenger passenger("unique_id", PassengerSegmentType::ECONOMY);
         passenger.addBaggageItem(25);
         assert(passenger.getBaggageWeight() == 0);
@@ -75,7 +79,8 @@ public:
         assert(passenger.getBaggageWeight() == 10);
     }
 
-    static void testPassengerAddLuggageItem() {
+    static void testPassengerAddLuggageItem()
+    {
         Passenger passenger("unique_id", PassengerSegmentType::ECONOMY);
         passenger.addLuggageItem(15);
         assert(passenger.getLuggageWeight() == 0);
@@ -84,7 +89,8 @@ public:
         assert(passenger.getLuggageWeight() == 5);
     }
 
-    static void testPassengerSegmentInvariant() {
+    static void testPassengerSegmentInvariant()
+    {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
         PassengerSegment segment(200, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum));
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
@@ -99,7 +105,8 @@ public:
         assert(segment.invariant() == true);
     }
 
-    static void testPassengerSegmentAdd() {
+    static void testPassengerSegmentAdd()
+    {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
         PassengerSegment segment(50, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum));
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
@@ -112,7 +119,8 @@ public:
         assert(segment.add(passenger2) == ReturnCodeType::ALLOCATED);
     }
 
-    static void testSegmentInabilityToAdd() {
+    static void testSegmentInabilityToAdd()
+    {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
         PassengerSegment segment(3, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum));
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
@@ -124,7 +132,8 @@ public:
         assert(segment.getBaggageWeight() == 0 && segment.getLuggageWeight() == 0);
     }
 
-    static void testSegmentBaggageDrop() {
+    static void testSegmentBaggageDrop()
+    {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
         PassengerSegment segment(3, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum));
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
@@ -137,25 +146,28 @@ public:
         assert(segment.getBaggageWeight() == 0 && segment.getLuggageWeight() == 2);
     }
 
-    static void testPassengerSegmentAllowedWeightGetter() {
+    static void testPassengerSegmentAllowedWeightGetter()
+    {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
         PassengerSegment segment(50, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum));
         assert(segment.getAllowedWeight() == 50);
     }
 
-    static void testDropBiggestBaggagePosition() {
+    static void testDropBiggestBaggagePosition()
+    {
         Passenger passenger("unique_id", PassengerSegmentType::FIRST_CLASS);
         passenger.addBaggageItem(12);
         passenger.addBaggageItem(32);
 
         int weightRemoved = passenger.dropBiggestBaggagePosition();
         assert(weightRemoved == 32);
-        assert(passenger.getBaggageWeight() == 12); 
+        assert(passenger.getBaggageWeight() == 12);
     }
 
-    static void testRegisterBaggage() {
+    static void testRegisterBaggage()
+    {
         PassengerSegmentType segmentTypeEnum = PassengerSegmentType::ECONOMY;
-        PassengerSegment segment(100, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum)); // лимит в 100 кг
+        PassengerSegment segment(100, segmentTypeEnum, segmentCapacityBind.at(segmentTypeEnum));
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
 
         passenger1->addBaggageItem(24);
@@ -169,7 +181,7 @@ public:
         PassengerSegmentType businessSegmentTypeEnum = PassengerSegmentType::BUSINESS;
         PassengerSegment economySegment(20, economySegmentTypeEnum, segmentCapacityBind.at(economySegmentTypeEnum));
         PassengerSegment businessSegment(2, businessSegmentTypeEnum, segmentCapacityBind.at(businessSegmentTypeEnum));
-        
+
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
         std::shared_ptr<Passenger> passenger2 = std::make_shared<Passenger>("passenger2", PassengerSegmentType::BUSINESS);
         std::shared_ptr<Passenger> passenger3 = std::make_shared<Passenger>("passenger3", PassengerSegmentType::ECONOMY);
@@ -181,7 +193,7 @@ public:
         economySegment.add(passenger3);
         ReturnCodeType codeType = businessSegment.add(passenger2);
         assert(codeType == ReturnCodeType::NEED_TRANSFER);
-        
+
         economySegment.registerBaggage(passenger2);
         assert(economySegment.getBaggageWeight() == 5 + 8);
     }
@@ -192,7 +204,7 @@ public:
         PassengerSegmentType businessSegmentTypeEnum = PassengerSegmentType::BUSINESS;
         PassengerSegment economySegment(30, economySegmentTypeEnum, segmentCapacityBind.at(economySegmentTypeEnum));
         PassengerSegment businessSegment(2, businessSegmentTypeEnum, segmentCapacityBind.at(businessSegmentTypeEnum));
-        
+
         auto economyTypeVariant = economySegment.getType();
         if (std::holds_alternative<PassengerSegmentType>(economyTypeVariant)) {
             PassengerSegmentType economyTypeVariantUnwrapped = std::get<PassengerSegmentType>(economyTypeVariant);
@@ -223,7 +235,7 @@ public:
         PassengerSegmentType businessSegmentTypeEnum = PassengerSegmentType::BUSINESS;
         PassengerSegment economySegment(20, economySegmentTypeEnum, segmentCapacityBind.at(economySegmentTypeEnum));
         PassengerSegment businessSegment(2, businessSegmentTypeEnum, segmentCapacityBind.at(businessSegmentTypeEnum));
-        
+
         std::shared_ptr<Passenger> passenger1 = std::make_shared<Passenger>("passenger1", PassengerSegmentType::ECONOMY);
         std::shared_ptr<Passenger> passenger2 = std::make_shared<Passenger>("passenger2", PassengerSegmentType::BUSINESS);
         passenger1->addBaggageItem(13);
@@ -236,7 +248,8 @@ public:
         assert(true);
     }
 
-    static void runTests() {
+    static void runTests()
+    {
         testPassengerInvariant();
         testPassengerBaggageBound();
         testPassengerLuggageBound();
@@ -258,7 +271,7 @@ public:
         testSegmentTypeGetter();
         testSegmentPositionsGetter();
         testSegmentShowInfo();
-        
+
         std::cout << "\nSUCCESS: Passenger tests passed successfully.\n\n";
     }
 };

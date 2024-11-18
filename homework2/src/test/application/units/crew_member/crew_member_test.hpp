@@ -4,14 +4,15 @@
 
 #include "../../../../main/application/units/crew_member/crew_members.hpp"
 
-class CrewMemberTestSuite
-{
+class CrewMemberTestSuite {
 public:
-    static std::shared_ptr<CrewMember> createCrewMember(const std::string& id, CrewMemberType type) {
+    static std::shared_ptr<CrewMember> createCrewMember(const std::string& id, CrewMemberType type)
+    {
         return std::make_shared<CrewMember>(id, type);
     }
 
-    static void testCrewMember() {
+    static void testCrewMember()
+    {
         auto crewMember = createCrewMember("ID_1", CrewMemberType::PILOT);
 
         assert(crewMember->invariant() == true);
@@ -27,7 +28,8 @@ public:
         crewMember->showInfo();
     }
 
-    static void testCrewSegment() {
+    static void testCrewSegment()
+    {
         int allowedWeight = 100;
         CrewSegment crewSegment(allowedWeight, CrewMemberType::PILOT);
 
@@ -49,6 +51,9 @@ public:
         assert(crewSegment.getBaggagePositions().empty());
 
         assert(crewSegment.invariant() == true);
+
+        auto crewMemberRegister = createCrewMember("ID_5", CrewMemberType::FLIGHT_ATTENDANT);
+        crewSegment.registerBaggage(crewMemberRegister);
 
         crewSegment.showInfo();
     }
