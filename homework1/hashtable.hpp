@@ -23,11 +23,13 @@ public:
     {
     }
 
-    class Iterator {
+    template<typename PairT>
+    class GenericIterator {
     public:
-        Iterator(typename std::vector<Bucket>::iterator tableIt,
-            typename std::vector<Bucket>::iterator tableEnd,
-            typename Bucket::iterator bucketIt)
+        using TableIterator = typename std::vector<Bucket>::iterator;
+        using BucketIterator = typename Bucket::iterator;
+
+        GenericIterator(TableIterator tableIt, TableIterator tableEnd, BucketIterator bucketIt)
             : tableIt(tableIt)
             , tableEnd(tableEnd)
             , bucketIt(bucketIt)
@@ -35,27 +37,27 @@ public:
             advanceToNextValid();
         }
 
-        KeyValuePair& operator*() { return *bucketIt; }
-        KeyValuePair* operator->() { return &(*bucketIt); }
+        PairT& operator*() { return *bucketIt; }
+        PairT* operator->() { return &(*bucketIt); }
 
-        Iterator& operator++()
+        GenericIterator& operator++()
         {
             ++bucketIt;
             advanceToNextValid();
             return *this;
         }
 
-        bool operator==(const Iterator& other) const
+        bool operator==(const GenericIterator& other) const
         {
             return tableIt == other.tableIt && bucketIt == other.bucketIt;
         }
 
-        bool operator!=(const Iterator& other) const { return !(*this == other); }
+        bool operator!=(const GenericIterator& other) const { return !(*this == other); }
 
     private:
-        typename std::vector<Bucket>::iterator tableIt;
-        typename std::vector<Bucket>::iterator tableEnd;
-        typename Bucket::iterator bucketIt;
+        TableIterator tableIt;
+        TableIterator tableEnd;
+        BucketIterator bucketIt;
 
         void advanceToNextValid()
         {
@@ -67,6 +69,9 @@ public:
         }
     };
 
+    using Iterator = GenericIterator<KeyValuePair>;
+    using ConstIterator = GenericIterator<const KeyValuePair>;
+
     Iterator begin()
     {
         return Iterator(table.begin(), table.end(), table.front().begin());
@@ -76,6 +81,19 @@ public:
     {
         return Iterator(table.end(), table.end(), typename Bucket::iterator());
     }
+
+    ConstIterator begin() const
+    {
+        return ConstIterator(table.begin(), table.end(), table.front().begin());
+    }
+
+    ConstIterator end() const
+    {
+        return ConstIterator(table.end(), table.end(), typename Bucket::const_iterator());
+    }
+
+    ConstIterator cbegin() const { return begin(); }
+    ConstIterator cend() const { return end(); }
 
     size_t size() const { return elementCount; }
     bool empty() const { return elementCount == 0; }
@@ -117,6 +135,17 @@ public:
         for (auto it = bucket.begin(); it != bucket.end(); ++it) {
             if (comparator(it->first, key))
                 return Iterator(table.begin() + bucketIndex, table.end(), it);
+        }
+        return end();
+    }
+
+    ConstIterator find(const Key& key) const
+    {
+        size_t bucketIndex = getBucketIndex(key);
+        const auto& bucket = table[bucketIndex];
+        for (auto it = bucket.begin(); it != bucket.end(); ++it) {
+            if (comparator(it->first, key))
+                return ConstIterator(table.begin() + bucketIndex, table.end(), it);
         }
         return end();
     }

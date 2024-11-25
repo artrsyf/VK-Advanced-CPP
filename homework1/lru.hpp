@@ -75,8 +75,9 @@ private:
 
     void moveToFront(CacheEntry& entry)
     {
+        KeyT key = *(entry.accessOrderIt);
         accessOrder.erase(entry.accessOrderIt);
-        entry.accessOrderIt = accessOrder.emplace(accessOrder.begin(), *(entry.accessOrderIt));
+        entry.accessOrderIt = accessOrder.emplace(accessOrder.begin(), key);
     }
 
     void evict(size_t newElementSize)
