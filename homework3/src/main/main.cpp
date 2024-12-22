@@ -1,13 +1,14 @@
 #include "serializer/serializer.hpp"
 
-int main() 
+int main()
 {
-    pkg::S1 s1_1 {1}, s1_2 {2}, s1_3 {3};
-    pkg::S2 s2_1 {1.23f};
-    pkg::S3 s3_struct = pkg::S3 { 323, "example_string", {1, 2, 3}, s2_1, {s1_1, s1_2, s1_3} };
+    pkg::S1 s1_1 { 1 }, s1_2 { 2 }, s1_3 { 3 };
+    pkg::S2 s2_1 { 1.23f };
+    pkg::S3 s3_struct = pkg::S3 { 323, "example_string", { 1, 2, 3 }, s2_1, { s1_1, s1_2, s1_3 } };
 
     nlohmann::json j = serialize(s3_struct);
-    std::cout << "Serialized JSON:\n" << j.dump(4) << std::endl;
+    std::cout << "Serialized JSON:\n"
+              << j.dump(4) << std::endl;
 
     pkg::S3 deserialized_s3 = deserialize<pkg::S3>(j);
     std::cout << "\nDeserialized structure:\n";
