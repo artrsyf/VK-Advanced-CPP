@@ -17,7 +17,6 @@ class TestSerializer {
         nlohmann::json j = serialize(s1_1);
         pkg::S1 deserialized_s1 = deserialize<pkg::S1>(j);
 
-        // Проверка десериализации для S1
         assert(deserialized_s1.r0 == 1);
     }
 
@@ -27,7 +26,6 @@ class TestSerializer {
 
         nlohmann::json j = serialize(s2_1);
 
-        // Проверка сериализации для S2
         assert(j["val"] == 1.23f);
     }
 
@@ -38,7 +36,6 @@ class TestSerializer {
         nlohmann::json j = serialize(s2_1);
         pkg::S2 deserialized_s2 = deserialize<pkg::S2>(j);
 
-        // Проверка десериализации для S2
         assert(deserialized_s2.val == 1.23f);
     }
 
@@ -50,7 +47,6 @@ class TestSerializer {
 
         nlohmann::json j = serialize(s3_struct);
 
-        // Проверка значений после сериализации
         assert(j["r1"] == 42);
         assert(j["some_str"] == "example_string");
         assert(j["vals"] == std::vector<int>({ 1, 2, 3 }));
@@ -70,7 +66,6 @@ class TestSerializer {
         nlohmann::json j = serialize(s3_struct);
         pkg::S3 deserialized_s3 = deserialize<pkg::S3>(j);
 
-        // Проверка значений после десериализации
         assert(deserialized_s3.r1 == 42);
         assert(deserialized_s3.some_str == "example_string");
         assert(deserialized_s3.vals == std::vector<int>({ 1, 2, 3 }));

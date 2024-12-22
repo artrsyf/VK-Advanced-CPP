@@ -31,23 +31,19 @@ BOOST_FUSION_DEFINE_STRUCT(
     S3,
     (int, r1)(std::string, some_str)(std::vector<int>, vals)(pkg::S2, s2_val)(std::vector<pkg::S1>, s1_vals))
 
-// Сериализация
 template<typename T>
 nlohmann::json serialize(const T& obj)
 {
     nlohmann::json j;
 
-    // Используем Boost.Fusion для обхода структуры и преобразования в json
     boost::fusion::for_each(boost::mpl::range_c<unsigned, 0, boost::fusion::result_of::size<T>::value>(), [&](auto index) {
         auto field = boost::fusion::at_c<index>(obj);
         using FieldType = std::decay_t<decltype(field)>;
         std::string fieldName = boost::fusion::extension::struct_member_name<T, index>::call();
 
-        // Если поле является вектором, сериализуем элементы по очереди
         if constexpr (std::is_same_v<FieldType, std::vector<int>>) {
             j[fieldName] = field;
         } else if constexpr (std::is_same_v<FieldType, std::vector<pkg::S1>>) {
-            // Для вектора структур S1
             nlohmann::json arr = nlohmann::json::array();
             for (const auto& item : field) {
                 arr.push_back({ { "r0", item.r0 } });
@@ -58,11 +54,10 @@ nlohmann::json serialize(const T& obj)
         } else if constexpr (std::is_same_v<FieldType, std::string>) {
             j[fieldName] = field;
         } else if constexpr (std::is_same_v<FieldType, int>) {
-            j[fieldName] = field; // Для поля r1
+            j[fieldName] = field;
         } else if constexpr (std::is_same_v<FieldType, float>) {
             j[fieldName] = field;
         } else {
-            // Для других полей
             j[fieldName] = field;
         }
     });
@@ -70,34 +65,30 @@ nlohmann::json serialize(const T& obj)
     return j;
 }
 
-// Десериализация
 template<typename T>
 T deserialize(const nlohmann::json& j)
 {
     T obj;
 
-    // Используем Boost.Fusion для обхода структуры и присваивания значений из JSON
     boost::fusion::for_each(boost::mpl::range_c<unsigned, 0, boost::fusion::result_of::size<T>::value>(), [&](auto index) {
         auto& field = boost::fusion::at_c<index>(obj);
         using FieldType = std::decay_t<decltype(field)>;
         std::string fieldName = boost::fusion::extension::struct_member_name<T, index>::call();
 
-        // Преобразуем вектора и другие поля из JSON
         if constexpr (std::is_same_v<FieldType, std::vector<int>>) {
-            field = j[fieldName].get<std::vector<int>>(); // Преобразуем вектор из JSON
+            field = j[fieldName].get<std::vector<int>>();
         } else if constexpr (std::is_same_v<FieldType, std::vector<pkg::S1>>) {
-            // Для вектора структур S1
             for (const auto& item : j[fieldName]) {
                 pkg::S1 s1_item;
-                s1_item.r0 = item["r0"].get<int>(); // Извлекаем "r0"
+                s1_item.r0 = item["r0"].get<int>();
                 field.push_back(s1_item);
             }
         } else if constexpr (std::is_same_v<FieldType, pkg::S2>) {
-            field.val = j[fieldName]["val"].get<float>(); // Извлекаем значение из s2_val
+            field.val = j[fieldName]["val"].get<float>();
         } else if constexpr (std::is_same_v<FieldType, std::string>) {
             field = j[fieldName].get<std::string>();
         } else if constexpr (std::is_same_v<FieldType, int>) {
-            field = j[fieldName].get<int>(); // Извлекаем значение для поля r1
+            field = j[fieldName].get<int>();
         } else if constexpr (std::is_same_v<FieldType, float>) {
             field = j[fieldName].get<float>();
         } else {
